@@ -4,9 +4,9 @@
 <AuthorizeView>
     <Authorized>
         Hello, @context.User.Identity?.Name!
-        <a href="api/Account/Logout" style="margin-left: 24px; color: white !important;">Log out</a>
+        <MudLink Href="api/Account/Logout" Class="ml-4">Log out</MudLink>
     </Authorized>
     <NotAuthorized>
-        <NavLink href="/Login">Log in</NavLink>
+        <MudLink Href="/Login">Log in</MudLink>
     </NotAuthorized>
 </AuthorizeView>
