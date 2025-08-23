@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
-namespace LTres.Olt.UI.Server;
+namespace LTres.Olt.UI.Server.Controllers;
 
 
 [Route("api/[controller]")]

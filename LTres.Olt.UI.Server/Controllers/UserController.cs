@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
-namespace LTres.Olt.UI.Server;
+namespace LTres.Olt.UI.Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -39,7 +39,7 @@ public class UserController : ControllerBase
 
         if (claimsPrincipal?.Claims?.Any() ?? false)
         {
-            //send all caims to client
+            //send all claims to client
             var claims = claimsPrincipal.Claims
                 .Select(u => new ClaimValue(u.Type, u.Value))
                 .ToList();
