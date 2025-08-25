@@ -1,8 +1,5 @@
-﻿using System.Security.Claims;
-using Bunit;
+﻿using Bunit;
 using Bunit.TestDoubles;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Interop;
@@ -12,20 +9,6 @@ namespace LTres.Olt.UI.Client.Tests;
 
 public class AppTests : TestContext
 {
-    private void SetAuthenticationState(bool anAuthenticatedState)
-    {
-        ClaimsIdentity identity = anAuthenticatedState ?
-            new([new Claim(ClaimTypes.Name, "Test User")], "TestAuthentication") :
-            new();
-
-        ClaimsPrincipal principal = new(identity);
-        AuthenticationState authState = new(principal);
-
-        Services.AddSingleton<AuthenticationStateProvider>(new TestAuthenticationStateProvider(authState));
-        Services.AddSingleton<IAuthorizationPolicyProvider>(new TestAuthorizationPolicyProvider());
-        Services.AddSingleton<IAuthorizationService>(new TestAuthorizationService(anAuthenticatedState));
-    }
-
     private void SetUpServices()
     {
         JSInterop.SetupVoid("mudKeyInterceptor.connect", _ => true);
@@ -41,7 +24,7 @@ public class AppTests : TestContext
     public void App_ShouldRenderCorrectlyByDefaultRoute()
     {
         SetUpServices();
-        SetAuthenticationState(false);
+        this.SetAuthenticationState(false);
 
         var component = RenderComponent<App>();
 
@@ -55,7 +38,7 @@ public class AppTests : TestContext
     public void App_ShouldRedirectToLoginIfUnauthenticated()
     {
         SetUpServices();
-        SetAuthenticationState(false);
+        this.SetAuthenticationState(false);
 
         var navigationMan = Services.GetRequiredService<FakeNavigationManager>();
         navigationMan.NavigateTo("/Authorized");
@@ -72,7 +55,7 @@ public class AppTests : TestContext
     public void App_ShouldRenderAuthorizedPageIfAuthenticated()
     {
         SetUpServices();
-        SetAuthenticationState(true);
+        this.SetAuthenticationState(true);
 
         var navigationMan = Services.GetRequiredService<FakeNavigationManager>();
         navigationMan.NavigateTo("/Authorized");

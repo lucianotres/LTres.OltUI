@@ -1,7 +1,9 @@
 
 using System.Security.Claims;
+using Bunit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LTres.Olt.UI.Client.Tests;
 
@@ -40,4 +42,22 @@ public class TestAuthorizationService(bool autorize) : IAuthorizationService
 
     public Task<AuthorizationResult> AuthorizeAsync(ClaimsPrincipal user, object? resource, string policyName)
         => Task.FromResult(_authorize ? AuthorizationResult.Success() : AuthorizationResult.Failed());
+}
+
+
+public static class TestAuthorizationExtensions
+{
+    public static void SetAuthenticationState(this TestContext context, bool anAuthenticatedState)
+    {
+        ClaimsIdentity identity = anAuthenticatedState ?
+            new([new Claim(ClaimTypes.Name, "Test User")], "TestAuthentication") :
+            new();
+
+        ClaimsPrincipal principal = new(identity);
+        AuthenticationState authState = new(principal);
+
+        context.Services.AddSingleton<AuthenticationStateProvider>(new TestAuthenticationStateProvider(authState));
+        context.Services.AddSingleton<IAuthorizationPolicyProvider>(new TestAuthorizationPolicyProvider());
+        context.Services.AddSingleton<IAuthorizationService>(new TestAuthorizationService(anAuthenticatedState));
+    }
 }
