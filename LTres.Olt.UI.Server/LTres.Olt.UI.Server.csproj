@@ -17,4 +17,8 @@
 	  <ProjectReference Include="..\LTres.Olt.UI.Client\LTres.Olt.UI.Client.csproj" />    
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="..\Tests\LTres.Olt.UI.Server.Tests\LTres.Olt.UI.Server.Tests.csproj" />
+  </ItemGroup>
+
 </Project>

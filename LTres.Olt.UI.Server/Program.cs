@@ -88,3 +88,5 @@ app.Map("/api/{**segment}", context =>
 app.MapFallbackToPage("/_Host");
 
 app.Run();
+
+public partial class Program { }
