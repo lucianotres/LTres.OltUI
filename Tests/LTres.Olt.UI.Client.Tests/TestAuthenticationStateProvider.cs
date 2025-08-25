@@ -31,11 +31,13 @@ public class TestAuthorizationPolicyProvider : IAuthorizationPolicyProvider
             new AuthorizationPolicyBuilder().RequireClaim(policyName).Build());
 }
 
-public class TestAuthorizationService : IAuthorizationService
+public class TestAuthorizationService(bool autorize) : IAuthorizationService
 {
+    private readonly bool _authorize = autorize;
+
     public Task<AuthorizationResult> AuthorizeAsync(ClaimsPrincipal user, object? resource, IEnumerable<IAuthorizationRequirement> requirements)
-        => Task.FromResult(AuthorizationResult.Success());
+        => Task.FromResult(_authorize ? AuthorizationResult.Success() : AuthorizationResult.Failed());
 
     public Task<AuthorizationResult> AuthorizeAsync(ClaimsPrincipal user, object? resource, string policyName)
-        => Task.FromResult(AuthorizationResult.Success());
+        => Task.FromResult(_authorize ? AuthorizationResult.Success() : AuthorizationResult.Failed());
 }

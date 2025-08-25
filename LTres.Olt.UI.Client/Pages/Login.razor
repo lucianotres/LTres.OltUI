@@ -25,6 +25,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        SchemesList = await ((HostAuthenticationStateProvider)authenticationStateProvider).GetSchemesList();
+        var hostAuthStateProvider = authenticationStateProvider as HostAuthenticationStateProvider;
+        
+        if (hostAuthStateProvider != null)
+            SchemesList = await hostAuthStateProvider.GetSchemesList();
     }
 }

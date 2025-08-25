@@ -23,7 +23,7 @@ public class AppTests : TestContext
 
         Services.AddSingleton<AuthenticationStateProvider>(new TestAuthenticationStateProvider(authState));
         Services.AddSingleton<IAuthorizationPolicyProvider>(new TestAuthorizationPolicyProvider());
-        Services.AddSingleton<IAuthorizationService>(new TestAuthorizationService());
+        Services.AddSingleton<IAuthorizationService>(new TestAuthorizationService(anAuthenticatedState));
     }
 
     private void SetUpServices()
@@ -42,7 +42,7 @@ public class AppTests : TestContext
     {
         SetUpServices();
         SetAuthenticationState(false);
-       
+
         var component = RenderComponent<App>();
 
         var router = component.FindComponent<Router>();
@@ -65,6 +65,23 @@ public class AppTests : TestContext
         var router = component.FindComponent<Router>();
 
         Assert.NotNull(router);
-        Assert.Contains("<div class=\"enter-with\">", component.Markup);
+        Assert.Contains("<div class=\"enter-with\"", component.Markup);
+    }
+    
+    [Fact]
+    public void App_ShouldRenderAuthorizedPageIfAuthenticated()
+    {
+        SetUpServices();
+        SetAuthenticationState(true);
+
+        var navigationMan = Services.GetRequiredService<FakeNavigationManager>();
+        navigationMan.NavigateTo("/Authorized");
+
+        var component = RenderComponent<App>();
+
+        var router = component.FindComponent<Router>();
+
+        Assert.NotNull(router);
+        Assert.Contains("You are authorized!</h1>", component.Markup);
     }
 }
