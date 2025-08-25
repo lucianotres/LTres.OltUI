@@ -97,6 +97,34 @@ public class HostAuthenticationStateProviderTests
         Assert.True(navigationMock.NavigatedForcedLoad);
     }
 
+    [Fact]
+    public async Task GetSchemesList_ShouldReturnAListOfSchemes()
+    {
+        List<string> schemes = ["Google", "Microsoft", "Facebook"];
+
+        var handlerMock = new Mock<HttpMessageHandler>();
+        handlerMock
+            .Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(JsonSerializer.Serialize(schemes))
+            });
+
+        var loggerMock = new Mock<ILogger<HostAuthenticationStateProvider>>();
+        var authStateProvider = new HostAuthenticationStateProvider(
+            new TestNavigationManager(),
+            new HttpClient(handlerMock.Object) { BaseAddress = new Uri("http://api.com/") },
+            loggerMock.Object);
+
+        var returnedList = await authStateProvider.GetSchemesList();
+
+        Assert.Equal(schemes, returnedList);
+    }
+
 
     private class TestNavigationManager : NavigationManager
     {
