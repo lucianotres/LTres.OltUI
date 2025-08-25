@@ -26,7 +26,10 @@ public class HostAuthenticationStateProvider : AuthenticationStateProvider
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
-        => new AuthenticationState(await GetUser(useCache: true));
+    {
+        return new AuthenticationState(await GetUser(useCache: true));
+    }
+
 
     public void SignIn(string? customReturnUrl = null)
     {
