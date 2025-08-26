@@ -7,18 +7,34 @@ namespace LTres.Olt.UI.Client.Tests.Services;
 
 public class AppPageLocalizerTests : TestContext
 {
-    [Fact]
-    public void AppPageLocalizer_ShouldReturnLocalizedStrings()
+    private void SetUp()
     {
         Services.AddSingleton<IStringLocalizerFactory, TestStringLocalizerFactory>();
         Services.AddTransient(typeof(IStringLocalizer<>), typeof(StringLocalizer<>));
         Services.AddTransient(typeof(AppPageLocalizer<>), typeof(AppPageLocalizer<>));
+    }
+
+    [Fact]
+    public void AppPageLocalizer_ShouldReturnLocalizedStrings()
+    {
+        SetUp();
 
         var appPageLocalizer = Services.GetRequiredService<AppPageLocalizer<AppPageLocalizerTests>>();
 
         Assert.NotNull(appPageLocalizer);
         Assert.Equal("Test Value", appPageLocalizer["TestKey"]);
         Assert.Equal("Test Value with args", appPageLocalizer["TestKey", "arg1"]);
+    }
+
+    [Fact]
+    public void GetTitle_ShouldReturnLocalizedStringForTitle()
+    {
+        SetUp();
+
+        var appPageLocalizer = Services.GetRequiredService<AppPageLocalizer<AppPageLocalizerTests>>();
+        var title = appPageLocalizer.GetTitle();
+
+        Assert.Equal("Test Value | Test Value", title);
     }
 
 
