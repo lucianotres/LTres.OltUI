@@ -1,7 +1,7 @@
 .data-list {
     display: flex;
     flex-direction: row;
-    gap: 4px;
+    gap: 16px;
     flex-wrap: wrap;
 }
 
