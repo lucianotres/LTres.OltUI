@@ -1,0 +1,45 @@
+@page "/OltHost"
+@using LTres.Olt.UI.Shared.Models
+@attribute [Authorize]
+@inject AppPageLocalizer<Index> localizer
+
+<PageTitle>@localizer.GetTitle()</PageTitle>
+
+<h1>Hosts!</h1>
+
+@foreach(var host in _Hosts) {
+    <MudCard @key="host.Id">
+        <MudCardContent>
+            <MudText Typo="Typo.h5">@host.Name</MudText>
+            <MudText Typo="Typo.h6">@host.Host</MudText>
+            <MudText Typo="Typo.body2">* Todo - add more info</MudText>
+            @if (host.tags != null) {
+                @foreach(var tag in host.tags)
+                {
+                    <MudChip @key="@tag" Value="@tag" Color="Color.Secondary" />
+                }
+            }
+        </MudCardContent>
+        <MudCardActions>
+            <MudTooltip Text="@localizer["Edit"]" Arrow="true">
+                <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
+            </MudTooltip>
+            <MudTooltip Text="@localizer["Delete"]" Arrow="true">
+                <MudIconButton Icon="@Icons.Material.Filled.DeleteForever" Color="Color.Default" />
+            </MudTooltip>
+        </MudCardActions>
+    </MudCard>
+}
+
+@code {
+    public IList<OLT_Host> _Hosts = new List<OLT_Host>(
+        [
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test Host",
+                Host = "127.0.0.1:161",
+                tags = new List<string>(["snmp","zte"])
+            }
+        ]);
+}
