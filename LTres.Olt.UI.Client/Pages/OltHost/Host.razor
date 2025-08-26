@@ -1,0 +1,41 @@
+@page "/OltHost/{id:guid}"
+@using LTres.Olt.UI.Shared.Models
+@attribute [Authorize]
+@inject AppPageLocalizer<Host> localizer
+@inject OLTServices oltServices
+@inject AppDataService appDataService
+
+<PageTitle>@localizer.GetTitle()</PageTitle>
+
+<MudText Typo="Typo.h3">@localizer["Title"]</MudText>
+<div class="mb-8">@Id</div>
+
+<div class="data-record">
+    <MudTextField T="string" 
+        Label="@localizer["Host"]" 
+        Variant="Variant.Text" 
+        Adornment="Adornment.End" 
+        AdornmentIcon="@Icons.Material.Filled.Abc"
+        HelperText="@localizer["HostDesc"]"/>
+
+    <MudTextField T="int" 
+        Label="@localizer["Port"]" 
+        Variant="Variant.Text" 
+        Adornment="Adornment.End" 
+        AdornmentIcon="@Icons.Material.Filled.Pin"
+        HelperText="@localizer["PortDesc"]"/>
+
+    <MudTextField T="string" 
+        Label="@localizer["Name"]" 
+        Variant="Variant.Text" 
+        Adornment="Adornment.End" 
+        AdornmentIcon="@Icons.Material.Filled.Abc"
+        HelperText="@localizer["NameDesc"]"/>
+</div>
+
+@code {
+    [Parameter]
+    public Guid? Id { get; set; }
+
+
+}
