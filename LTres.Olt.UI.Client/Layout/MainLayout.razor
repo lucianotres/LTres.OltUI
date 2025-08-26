@@ -1,4 +1,6 @@
 @inherits LayoutComponentBase
+@inject AppDataService appDataService
+
 <MudThemeProvider @bind-IsDarkMode="@isDark" />
 <MudPopoverProvider />
 <MudDialogProvider />
@@ -9,6 +11,9 @@
         <MudSpacer />
         <LoginDisplay />
         <MudSwitch @bind-Value="@isDark" Color="Color.Primary" Class="ma-4" ThumbIcon="@Icons.Material.Filled.DarkMode" />
+        @if (appDataService.Loading) {
+            <MudProgressLinear Indeterminate="true" Color="Color.Default" Rounded="false" Striped="false" Size="Size.Small" Class="pgb-loading" />
+        }
     </MudAppBar>
     <MudDrawer @bind-Open="@open" ClipMode="DrawerClipMode.Always" Breakpoint="Breakpoint.Lg" Elevation="1" Variant="DrawerVariant.Mini" Overlay="false">
         <NavMenu />
@@ -25,7 +30,12 @@
 @code{
     private bool open = false;
     private bool isDark = true;
-    
+
+    protected override void OnInitialized()
+    {
+        appDataService.PropertyChanged += (ss, ee) => StateHasChanged();
+    }
+
     private void ToggleDrawer()
     {
         open = !open;

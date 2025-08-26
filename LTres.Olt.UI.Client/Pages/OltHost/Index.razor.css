@@ -1,0 +1,17 @@
+.data-list {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.data-list > ::deep div {
+    flex: 1;
+    min-width: 100%;
+}
+
+@media (min-width: 641px) {
+    .data-list > ::deep div {
+        min-width: 400px;
+    }
+}

@@ -27,11 +27,13 @@ builder.Services.AddHttpClient("default", client =>
 });
 builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("default"));
 
-/*builder.Services.AddHttpClient(AuthDefaults.AuthorizedClientName, client =>
+//api services
+builder.Services.AddHttpClient("api", client =>
 {
-    client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+    client.BaseAddress = new Uri("http://localhost:5000/api/");
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-}).AddHttpMessageHandler<AuthorizedHandler>();
-*/
+});
+builder.Services.AddTransient<OLTServices>();
+builder.Services.AddSingleton<AppDataService>();
 
 await builder.Build().RunAsync();
