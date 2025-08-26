@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Localization;
 using MudBlazor.Services;
 using System.Net.Http.Headers;
 
@@ -13,6 +14,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddLocalization();
 builder.Services.AddMudServices();
+builder.Services.TryAddTransient(typeof(AppPageLocalizer<>), typeof(AppPageLocalizer<>));
 
 //authorization scheme services
 builder.Services.AddAuthorizationCore();

@@ -1,8 +1,9 @@
 @page "/Login"
 @using LTres.Olt.UI.Client.Services
+@inject AppPageLocalizer<Login> localizer
 @inject AuthenticationStateProvider authenticationStateProvider
 
-<PageTitle>Log in</PageTitle>
+<PageTitle>@localizer.GetTitle("Login")</PageTitle>
 
 <div class="enter-with">
     @foreach (var scheme in SchemesList)
