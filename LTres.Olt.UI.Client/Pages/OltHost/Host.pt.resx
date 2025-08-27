@@ -145,4 +145,8 @@
     <value>Nomo do dispositvo para mostrar</value>
     <comment/>
   </data>
+  <data name="CommunityDesc" xml:space="preserve">
+    <value>SNMP community para se comunicar com o dispositivo</value>
+    <comment/>
+  </data>
 </root>

@@ -7,7 +7,10 @@
 
 <PageTitle>@localizer.GetTitle()</PageTitle>
 
-<MudText Typo="Typo.h3">@localizer["Title"]</MudText>
+<div class="data-header">
+    <MudText Typo="Typo.h3">@localizer["Title"]</MudText>
+    <MudSwitch T="bool" Color="Color.Primary" ThumbIcon="@Icons.Material.Filled.CloudDone">Active</MudSwitch>
+</div>
 <div class="mb-8">@Id</div>
 
 <div class="data-record">
@@ -18,12 +21,13 @@
         AdornmentIcon="@Icons.Material.Filled.Abc"
         HelperText="@localizer["HostDesc"]"/>
 
-    <MudTextField T="int" 
+    <MudNumericField T="int" 
         Label="@localizer["Port"]" 
         Variant="Variant.Text" 
         Adornment="Adornment.End" 
         AdornmentIcon="@Icons.Material.Filled.Pin"
-        HelperText="@localizer["PortDesc"]"/>
+        HelperText="@localizer["PortDesc"]"
+        Min="0" Max="65535" Step="1" />
 
     <MudTextField T="string" 
         Label="@localizer["Name"]" 
@@ -31,6 +35,30 @@
         Adornment="Adornment.End" 
         AdornmentIcon="@Icons.Material.Filled.Abc"
         HelperText="@localizer["NameDesc"]"/>
+
+    <MudTextField T="string" 
+        Label="SNMP Community" 
+        Variant="Variant.Text"
+        Adornment="Adornment.End" 
+        AdornmentIcon="@Icons.Material.Filled.Abc"
+        HelperText="@localizer["CommunityDesc"]" />
+    
+    <MudSelect T="int" 
+        Label="SNMP Version">
+        <MudSelectItem Value="1">1</MudSelectItem>
+        <MudSelectItem Value="2">2</MudSelectItem>
+    </MudSelect>
+
+    <div>
+        <MudNumericField T="int" 
+            Label="@localizer["Timeout"]" 
+            Variant="Variant.Text" 
+            Adornment="Adornment.End" 
+            AdornmentIcon="@Icons.Material.Filled.Pin"
+            HelperText="@localizer["TimeoutDesc"]" 
+            Min="100" Max="10000" Step="100"/>
+        <MudSwitch T="bool" Color="@Color.Primary">SNMP Bulk</MudSwitch>
+    </div>
 </div>
 
 @code {
