@@ -13,12 +13,18 @@
 
     <div class="data-header">
         <MudText Typo="Typo.h3">@localizer["Title"]</MudText>
-        <MudSwitch @bind-Value="Model.Active" Color="Color.Primary" ThumbIcon="@Icons.Material.Filled.CloudDone">Active</MudSwitch>
+        <MudSwitch 
+            @bind-Value="Model.Active" 
+            Disabled="@appDataService.Loading"
+            Color="Color.Primary" 
+            ThumbIcon="@Icons.Material.Filled.CloudDone"
+            >Active</MudSwitch>
     </div>
     <div class="mb-8">@Id</div>
 
     <div class="data-record">
         <MudTextField @bind-Value="Model.HostName" For="() => Model.Host"
+            Disabled="@appDataService.Loading"
             Label="@localizer["Host"]" 
             Variant="Variant.Text" 
             Adornment="Adornment.End" 
@@ -26,6 +32,7 @@
             HelperText="@localizer["HostDesc"]"/>
 
         <MudNumericField @bind-Value="Model.HostPort" 
+            Disabled="@appDataService.Loading"
             Label="@localizer["Port"]" 
             Variant="Variant.Text" 
             Adornment="Adornment.End" 
@@ -34,6 +41,7 @@
             Min="0" Max="65535" Step="1" />
 
         <MudTextField @bind-Value="Model.Name" For="() => Model.Name"
+            Disabled="@appDataService.Loading"
             Label="@localizer["Name"]" 
             Variant="Variant.Text" 
             Adornment="Adornment.End" 
@@ -41,6 +49,7 @@
             HelperText="@localizer["NameDesc"]"/>
 
         <MudTextField @bind-Value="Model.SnmpCommunity"
+            Disabled="@appDataService.Loading"
             Label="SNMP Community" 
             Variant="Variant.Text"
             Adornment="Adornment.End" 
@@ -48,6 +57,7 @@
             HelperText="@localizer["CommunityDesc"]" />
         
         <MudSelect @bind-Value="Model.SnmpVersion"
+            Disabled="@appDataService.Loading"
             Label="SNMP Version">
             <MudSelectItem Value="@(1 as int?)">1</MudSelectItem>
             <MudSelectItem Value="@(2 as int?)">2</MudSelectItem>
@@ -55,22 +65,28 @@
 
         <div>
             <MudNumericField @bind-Value="Model.GetTimeout"
+                Disabled="@appDataService.Loading"
                 Label="@localizer["Timeout"]" 
                 Variant="Variant.Text" 
                 Adornment="Adornment.End" 
                 AdornmentIcon="@Icons.Material.Filled.Pin"
                 HelperText="@localizer["TimeoutDesc"]" 
                 Min="100" Max="10000" Step="100"/>
-            <MudSwitch @bind-Value="Model.SnmpBulk" Color="@Color.Primary">SNMP Bulk</MudSwitch>
+            <MudSwitch @bind-Value="Model.SnmpBulk" 
+                Disabled="@appDataService.Loading" 
+                Color="@Color.Primary"
+                >SNMP Bulk</MudSwitch>
         </div>
     </div>
 
     <div class="data-actions">
-        <MudButton Variant="Variant.Filled" 
+        <MudButton Variant="Variant.Filled"
+            Disabled="@appDataService.Loading"
             StartIcon="@Icons.Material.Filled.Save"
             Color="@Color.Success"
             ButtonType="ButtonType.Submit">@localizer["Save"]</MudButton>
-        <MudButton Variant="Variant.Filled" 
+        <MudButton Variant="Variant.Filled"
+            Disabled="@appDataService.Loading"
             StartIcon="@Icons.Material.Filled.Cancel"
             Color="@Color.Default"
             OnClick="HandleCancel">@localizer["Cancel"]</MudButton>
@@ -82,6 +98,31 @@
     public Guid? Id { get; set; }
 
     public OLT_Host Model { get; private set; } = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        if (!Id.HasValue)
+            return;
+
+        try
+        {
+            appDataService.Loading = true;
+            StateHasChanged();
+
+            Model = (await oltServices.GetHost(Id.Value)) ?? new();
+        }
+        finally
+        {
+            appDataService.Loading = false;
+            StateHasChanged();
+        }
+    }
 
     private async Task HandleCancel()
     {

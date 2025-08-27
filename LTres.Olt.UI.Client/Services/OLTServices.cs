@@ -9,4 +9,7 @@ public class OLTServices(IHttpClientFactory clientFactory)
 
     public async Task<IEnumerable<OLT_Host>?> GetHosts()
       => await _client.GetFromJsonAsync<IEnumerable<OLT_Host>>("OLTHost");
+
+    public async Task<OLT_Host?> GetHost(Guid id)
+      => await _client.GetFromJsonAsync<OLT_Host>($"OLTHost/{id}");
 }
