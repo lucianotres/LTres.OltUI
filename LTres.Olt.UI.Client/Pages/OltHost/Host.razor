@@ -5,10 +5,11 @@
 @inject OLTServices oltServices
 @inject AppDataService appDataService
 @inject IJSRuntime js
+@inject DialogTools dialog
 
 <PageTitle>@localizer.GetTitle()</PageTitle>
 
-<EditForm Model="@Model" OnSubmit="HandleSubmit">
+<EditForm Model="@Model" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator />
 
     <div class="data-header">
@@ -129,11 +130,8 @@
         await js.InvokeVoidAsync("history.back");
     }
 
-    private async Task HandleSubmit(EditContext args)
+    private async Task HandleSubmit()
     {
-        if (!args.Validate())
-            return;
-
-        await js.InvokeVoidAsync("alert", $"Test ok");
+        _ = await dialog.OkAsync("Device successfully saved!", localizer["Title"]);
     }
 }

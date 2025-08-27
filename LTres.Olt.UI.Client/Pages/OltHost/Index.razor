@@ -4,7 +4,7 @@
 @inject AppPageLocalizer<Index> localizer
 @inject OLTServices oltServices
 @inject AppDataService appDataService
-@inject IDialogService dialogService
+@inject DialogTools dialog
 
 <PageTitle>@localizer.GetTitle()</PageTitle>
 
@@ -63,10 +63,6 @@
     private async void HandleDeleteHost(OLT_Host host)
     {
         //todo: parameters here for dialog
-        
-        await dialogService.ShowMessageBox(localizer["Title"], "todo", localizer["Yes"], localizer["No"], null, new() 
-        {
-            Position = DialogPosition.TopCenter
-        });
+        _ = await dialog.DeleteAsync("Delete test", localizer["Title"]);
     }
 }

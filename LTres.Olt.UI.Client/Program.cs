@@ -1,5 +1,6 @@
 using LTres.Olt.UI.Client;
 using LTres.Olt.UI.Client.Services;
+using LTres.Olt.UI.Client.Shared;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -15,6 +16,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddLocalization();
 builder.Services.AddMudServices();
 builder.Services.TryAddTransient(typeof(AppPageLocalizer<>), typeof(AppPageLocalizer<>));
+builder.Services.AddTransient<DialogTools>();
 
 //authorization scheme services
 builder.Services.AddAuthorizationCore();
