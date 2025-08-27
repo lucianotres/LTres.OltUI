@@ -7,6 +7,7 @@
 @inject IJSRuntime js
 @inject DialogTools dialog
 @inject ToastTools toast
+@inject NavigationManager navigation
 
 <PageTitle>@localizer.GetTitle()</PageTitle>
 
@@ -126,13 +127,44 @@
         }
     }
 
+    private async Task<bool?> SaveData()
+    {
+        try
+        {
+            appDataService.Loading = true;
+            StateHasChanged();
+
+            if (Id.HasValue)
+            {
+                var result = await oltServices.PutHost(Model);
+                return result == Guid.Empty ? null : result == Id;
+            }
+
+            return false;
+        }
+        finally
+        {
+            appDataService.Loading = false;
+            StateHasChanged();
+        }
+    }
+
     private async Task HandleCancel()
     {
         await js.InvokeVoidAsync("history.back");
     }
 
-    private void HandleSubmit()
+    private async Task HandleSubmit()
     {
-        toast.Success("Device successfully saved!");
+        var saved = await SaveData();
+
+        if (saved == true)
+            toast.Success(string.Format(localizer["SavedMsg"], Model.Name));
+                
+        if (saved == false)
+            toast.Error(localizer["SaveError"]);
+
+        if (saved.GetValueOrDefault(true))
+            navigation.NavigateTo("/OltHost");
     }
 }

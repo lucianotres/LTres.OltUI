@@ -149,4 +149,8 @@
     <value>SNMP community to communicate with device</value>
     <comment/>
   </data>
+  <data name="SavedMsg" xml:space="preserve">
+    <value>Device {0} successfully saved!</value>
+    <comment/>
+  </data>
 </root>

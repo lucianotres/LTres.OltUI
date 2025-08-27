@@ -133,4 +133,8 @@
     <value>Cancelar</value>
     <comment/>
   </data>
+  <data name="SaveError" xml:space="preserve">
+    <value>Dados não puderam ser salvos, contate o administrador!</value>
+    <comment/>
+  </data>
 </root>

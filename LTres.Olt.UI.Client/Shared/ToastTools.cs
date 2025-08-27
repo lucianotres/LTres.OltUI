@@ -8,4 +8,9 @@ public class ToastTools(ISnackbar snackbar)
     {
         snackbar.Add(message, severity: Severity.Success);
     }
+
+    public void Error(string message)
+    {
+        snackbar.Add(message, severity: Severity.Error);
+    }
 }
