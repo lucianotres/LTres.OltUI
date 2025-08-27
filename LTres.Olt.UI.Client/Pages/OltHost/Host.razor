@@ -8,81 +8,91 @@
 
 <PageTitle>@localizer.GetTitle()</PageTitle>
 
-<div class="data-header">
-    <MudText Typo="Typo.h3">@localizer["Title"]</MudText>
-    <MudSwitch T="bool" Color="Color.Primary" ThumbIcon="@Icons.Material.Filled.CloudDone">Active</MudSwitch>
-</div>
-<div class="mb-8">@Id</div>
+<EditForm Model="@Model" OnSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
 
-<div class="data-record">
-    <MudTextField T="string" 
-        Label="@localizer["Host"]" 
-        Variant="Variant.Text" 
-        Adornment="Adornment.End" 
-        AdornmentIcon="@Icons.Material.Filled.Abc"
-        HelperText="@localizer["HostDesc"]"/>
+    <div class="data-header">
+        <MudText Typo="Typo.h3">@localizer["Title"]</MudText>
+        <MudSwitch @bind-Value="Model.Active" Color="Color.Primary" ThumbIcon="@Icons.Material.Filled.CloudDone">Active</MudSwitch>
+    </div>
+    <div class="mb-8">@Id</div>
 
-    <MudNumericField T="int" 
-        Label="@localizer["Port"]" 
-        Variant="Variant.Text" 
-        Adornment="Adornment.End" 
-        AdornmentIcon="@Icons.Material.Filled.Pin"
-        HelperText="@localizer["PortDesc"]"
-        Min="0" Max="65535" Step="1" />
+    <div class="data-record">
+        <MudTextField @bind-Value="Model.HostName" For="() => Model.Host"
+            Label="@localizer["Host"]" 
+            Variant="Variant.Text" 
+            Adornment="Adornment.End" 
+            AdornmentIcon="@Icons.Material.Filled.Abc"
+            HelperText="@localizer["HostDesc"]"/>
 
-    <MudTextField T="string" 
-        Label="@localizer["Name"]" 
-        Variant="Variant.Text" 
-        Adornment="Adornment.End" 
-        AdornmentIcon="@Icons.Material.Filled.Abc"
-        HelperText="@localizer["NameDesc"]"/>
-
-    <MudTextField T="string" 
-        Label="SNMP Community" 
-        Variant="Variant.Text"
-        Adornment="Adornment.End" 
-        AdornmentIcon="@Icons.Material.Filled.Abc"
-        HelperText="@localizer["CommunityDesc"]" />
-    
-    <MudSelect T="int" 
-        Label="SNMP Version">
-        <MudSelectItem Value="1">1</MudSelectItem>
-        <MudSelectItem Value="2">2</MudSelectItem>
-    </MudSelect>
-
-    <div>
-        <MudNumericField T="int" 
-            Label="@localizer["Timeout"]" 
+        <MudNumericField @bind-Value="Model.HostPort" 
+            Label="@localizer["Port"]" 
             Variant="Variant.Text" 
             Adornment="Adornment.End" 
             AdornmentIcon="@Icons.Material.Filled.Pin"
-            HelperText="@localizer["TimeoutDesc"]" 
-            Min="100" Max="10000" Step="100"/>
-        <MudSwitch T="bool" Color="@Color.Primary">SNMP Bulk</MudSwitch>
-    </div>
-</div>
+            HelperText="@localizer["PortDesc"]"
+            Min="0" Max="65535" Step="1" />
 
-<div class="data-actions">
-    <MudButton Variant="Variant.Filled" 
-        StartIcon="@Icons.Material.Filled.Save"
-        Color="@Color.Success"
-        OnClick="HandleSave">@localizer["Save"]</MudButton>
-    <MudButton Variant="Variant.Filled" 
-        StartIcon="@Icons.Material.Filled.Cancel"
-        Color="@Color.Default"
-        OnClick="HandleCancel">@localizer["Cancel"]</MudButton>
-</div>
+        <MudTextField @bind-Value="Model.Name" For="() => Model.Name"
+            Label="@localizer["Name"]" 
+            Variant="Variant.Text" 
+            Adornment="Adornment.End" 
+            AdornmentIcon="@Icons.Material.Filled.Abc"
+            HelperText="@localizer["NameDesc"]"/>
+
+        <MudTextField @bind-Value="Model.SnmpCommunity"
+            Label="SNMP Community" 
+            Variant="Variant.Text"
+            Adornment="Adornment.End" 
+            AdornmentIcon="@Icons.Material.Filled.Abc"
+            HelperText="@localizer["CommunityDesc"]" />
+        
+        <MudSelect @bind-Value="Model.SnmpVersion"
+            Label="SNMP Version">
+            <MudSelectItem Value="@(1 as int?)">1</MudSelectItem>
+            <MudSelectItem Value="@(2 as int?)">2</MudSelectItem>
+        </MudSelect>
+
+        <div>
+            <MudNumericField @bind-Value="Model.GetTimeout"
+                Label="@localizer["Timeout"]" 
+                Variant="Variant.Text" 
+                Adornment="Adornment.End" 
+                AdornmentIcon="@Icons.Material.Filled.Pin"
+                HelperText="@localizer["TimeoutDesc"]" 
+                Min="100" Max="10000" Step="100"/>
+            <MudSwitch @bind-Value="Model.SnmpBulk" Color="@Color.Primary">SNMP Bulk</MudSwitch>
+        </div>
+    </div>
+
+    <div class="data-actions">
+        <MudButton Variant="Variant.Filled" 
+            StartIcon="@Icons.Material.Filled.Save"
+            Color="@Color.Success"
+            ButtonType="ButtonType.Submit">@localizer["Save"]</MudButton>
+        <MudButton Variant="Variant.Filled" 
+            StartIcon="@Icons.Material.Filled.Cancel"
+            Color="@Color.Default"
+            OnClick="HandleCancel">@localizer["Cancel"]</MudButton>
+    </div>
+</EditForm>
 
 @code {
     [Parameter]
     public Guid? Id { get; set; }
 
-    private async Task HandleSave()
-    {
-        await js.InvokeVoidAsync("history.back");
-    }
+    public OLT_Host Model { get; private set; } = new();
+
     private async Task HandleCancel()
     {
         await js.InvokeVoidAsync("history.back");
+    }
+
+    private async Task HandleSubmit(EditContext args)
+    {
+        if (!args.Validate())
+            return;
+
+        await js.InvokeVoidAsync("alert", $"Test ok");
     }
 }
