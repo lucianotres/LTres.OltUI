@@ -129,4 +129,12 @@
     <value>No</value>
     <comment/>
   </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+    <comment/>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment/>
+  </data>
 </root>
