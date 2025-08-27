@@ -6,6 +6,7 @@
 @inject AppDataService appDataService
 @inject IJSRuntime js
 @inject DialogTools dialog
+@inject ToastTools toast
 
 <PageTitle>@localizer.GetTitle()</PageTitle>
 
@@ -130,8 +131,8 @@
         await js.InvokeVoidAsync("history.back");
     }
 
-    private async Task HandleSubmit()
+    private void HandleSubmit()
     {
-        _ = await dialog.OkAsync("Device successfully saved!", localizer["Title"]);
+        toast.Success("Device successfully saved!");
     }
 }

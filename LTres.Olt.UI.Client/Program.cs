@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Localization;
+using MudBlazor;
 using MudBlazor.Services;
 using System.Net.Http.Headers;
 
@@ -14,9 +14,15 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddLocalization();
-builder.Services.AddMudServices();
+builder.Services.AddMudServices(cfg =>
+{
+    cfg.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
+    cfg.SnackbarConfiguration.ShowCloseIcon = true;
+    cfg.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
+});
 builder.Services.TryAddTransient(typeof(AppPageLocalizer<>), typeof(AppPageLocalizer<>));
 builder.Services.AddTransient<DialogTools>();
+builder.Services.AddTransient<ToastTools>();
 
 //authorization scheme services
 builder.Services.AddAuthorizationCore();
