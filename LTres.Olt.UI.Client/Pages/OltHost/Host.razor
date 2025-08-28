@@ -1,4 +1,5 @@
 @page "/OltHost/{id:guid}"
+@page "/OltHost/new"
 @using LTres.Olt.UI.Shared.Models
 @attribute [Authorize]
 @inject AppPageLocalizer<Host> localizer
@@ -15,7 +16,10 @@
     <DataAnnotationsValidator />
 
     <div class="data-header">
-        <MudText Typo="Typo.h3">@localizer["Title"]</MudText>
+        <MudText Typo="Typo.h3">
+            @localizer["Title"]
+            @if(!Id.HasValue) { <MudIcon Icon="@Icons.Material.Filled.AddCircleOutline" Class="ml-2" /> }
+        </MudText>
         <MudSwitch 
             @bind-Value="Model.Active" 
             Disabled="@appDataService.Loading"
@@ -104,14 +108,23 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-            await LoadData();
+        if (!firstRender) 
+            return;
+
+        if (!await LoadData())
+        {
+            _ = await (await dialog.OkAsync(localizer["NotFound"])).Result;
+            navigation.NavigateTo("/OltHost");
+        }
     }
 
-    private async Task LoadData()
+    private async Task<bool> LoadData()
     {
         if (!Id.HasValue)
-            return;
+        {
+            NewData();
+            return true;
+        }
 
         try
         {
@@ -119,12 +132,29 @@
             StateHasChanged();
 
             Model = (await oltServices.GetHost(Id.Value)) ?? new();
+            return Model.Id == Id;
         }
         finally
         {
             appDataService.Loading = false;
             StateHasChanged();
         }
+    }
+
+    private void NewData()
+    {
+        Model = new()
+        {
+            Id = Guid.Empty,
+            HostName = "",
+            HostPort = 161,
+            Active = true,
+            SnmpCommunity = "public",
+            SnmpVersion = 2,
+            SnmpBulk = true,
+            GetTimeout = 1000
+        };
+        StateHasChanged();
     }
 
     private async Task<bool?> SaveData()
@@ -139,8 +169,11 @@
                 var result = await oltServices.PutHost(Model);
                 return result == Guid.Empty ? null : result == Id;
             }
-
-            return false;
+            else
+            {
+                var result = await oltServices.PostHost(Model);
+                return result.HasValue && result != Guid.Empty;
+            }
         }
         finally
         {
