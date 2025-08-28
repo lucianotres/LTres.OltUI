@@ -33,5 +33,12 @@ public class OLTServices(IHttpClientFactory clientFactory)
             await result.Content.ReadFromJsonAsync<Guid?>() :
             null;
     }
-    
+
+    public async Task<Guid?> DeleteHost(Guid hostId)
+    {
+        var result = await _client.DeleteAsync($"OLTHost/{hostId}");
+        return result.IsSuccessStatusCode ?
+            await result.Content.ReadFromJsonAsync<Guid?>() :
+            null;
+    }    
 }

@@ -5,6 +5,7 @@
 @inject OLTServices oltServices
 @inject AppDataService appDataService
 @inject DialogTools dialog
+@inject ToastTools toast
 
 <PageTitle>@localizer.GetTitle()</PageTitle>
 
@@ -60,9 +61,45 @@
         }
     }
 
+    private async Task<bool> DeleteData(OLT_Host host)
+    {
+        try
+        {
+            appDataService.Loading = true;
+            
+            var result = await oltServices.DeleteHost(host.Id);
+            return result.HasValue && result.Value == host.Id;
+        }
+        finally
+        {
+            appDataService.Loading = false;
+            StateHasChanged();
+        }
+    }
+
+
     private async void HandleDeleteHost(OLT_Host host)
     {
-        //todo: parameters here for dialog
-        _ = await dialog.DeleteAsync("Delete test", localizer["Title"]);
+        if (host.Id == Guid.Empty)
+            return;
+
+        
+        var firstDialog = await dialog.DeleteAsync(string.Format(localizer["DeleteMsg1"], host.Name), localizer["Title"]);
+        if (((await firstDialog.Result)?.Canceled).GetValueOrDefault(true))
+            return;
+
+        var secondDialog = await dialog.DeleteAsync(string.Format(localizer["DeleteMsg2"], host.Name), localizer["Title"]);
+        if (((await secondDialog.Result)?.Canceled).GetValueOrDefault(true))
+            return;
+
+        if (await DeleteData(host))
+        {
+            toast.Success(string.Format(localizer["DeleteSuccess"], host.Name));
+            await LoadData();
+        }
+        else
+        {
+            toast.Error(string.Format(localizer["SaveError"], host.Name));
+        }
     }
 }

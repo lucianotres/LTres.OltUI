@@ -133,4 +133,16 @@
     <value>Delete</value>
     <comment/>
   </data>
+  <data name="DeleteMsg1" xml:space="preserve">
+    <value>Confirm device {0} deletion?</value>
+    <comment/>
+  </data>
+  <data name="DeleteMsg2" xml:space="preserve">
+    <value>Are you sure you want to delete device {0}?&#xD;&#xA;This action is IRREVERSIBLE and will ERASE all data of it?</value>
+    <comment/>
+  </data>
+  <data name="DeleteSuccess" xml:space="preserve">
+    <value>Device {0} and all data of it removed!</value>
+    <comment/>
+  </data>
 </root>
