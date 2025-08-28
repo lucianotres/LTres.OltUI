@@ -157,7 +157,7 @@
     <value>Dispositivo não encontrado!</value>
     <comment/>
   </data>
-  <data name="New" xml:space="preserve">
+  <data name="NewDev" xml:space="preserve">
     <value>(novo)</value>
     <comment/>
   </data>

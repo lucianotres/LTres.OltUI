@@ -141,4 +141,8 @@
     <value>Data could not be saved, contact the administrator!</value>
     <comment/>
   </data>
+  <data name="New" xml:space="preserve">
+    <value>New</value>
+    <comment/>
+  </data>
 </root>

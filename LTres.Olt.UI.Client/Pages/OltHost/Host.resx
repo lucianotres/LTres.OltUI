@@ -157,7 +157,7 @@
     <value>Device not found!</value>
     <comment/>
   </data>
-  <data name="New" xml:space="preserve">
+  <data name="NewDev" xml:space="preserve">
     <value>(New)</value>
     <comment/>
   </data>

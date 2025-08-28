@@ -7,6 +7,14 @@
 @inject DialogTools dialog
 @inject ToastTools toast
 
+<MudToolBar Dense="true">
+    <MudSpacer />
+    <MudButton Variant="@Variant.Filled" 
+        EndIcon="@Icons.Material.Filled.AddCircle"
+        Href="/OltHost/new"
+        >@localizer["New"]</MudButton>
+</MudToolBar>
+
 <div class="data-list">
     @foreach(var host in _Hosts) {
         <MudCard @key="host.Id" Outlined="true" Square="false">

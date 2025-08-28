@@ -137,4 +137,8 @@
     <value>Dados não puderam ser salvos, contate o administrador!</value>
     <comment/>
   </data>
+  <data name="New" xml:space="preserve">
+    <value>Novo</value>
+    <comment/>
+  </data>
 </root>

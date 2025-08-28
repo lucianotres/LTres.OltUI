@@ -2,6 +2,22 @@ main {
     
 }
 
+.content {
+    padding-top: 1.1rem;
+}
+
+article {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}
+
+::deep .mud-toolbar:not(.mud-toolbar-appbar) {
+    margin-top: -0.8rem;
+    margin-left: -16px;
+    margin-right: -16px;
+    margin-bottom: 0.3rem;
+}
+
 .app-bar-title {
     display: flex;
     flex-flow: column;
@@ -17,6 +33,11 @@ main {
     article {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
+    }
+
+    ::deep .mud-toolbar:not(.mud-toolbar-appbar) {
+        margin-left: -2rem;
+        margin-right: -1.5rem;
     }
 
     .app-bar-title > ::deep span {
