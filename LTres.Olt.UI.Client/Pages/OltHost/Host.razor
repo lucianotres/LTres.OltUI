@@ -10,15 +10,12 @@
 @inject ToastTools toast
 @inject NavigationManager navigation
 
-<PageTitle>@localizer.GetTitle()</PageTitle>
-
 <EditForm Model="@Model" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator />
 
     <div class="data-header">
-        <MudText Typo="Typo.h3">
-            @localizer["Title"]
-            @if(!Id.HasValue) { <MudIcon Icon="@Icons.Material.Filled.AddCircleOutline" Class="ml-2" /> }
+        <MudText Typo="Typo.caption" Color="@Color.Default">
+            @(Id?.ToString() ?? localizer["New"])
         </MudText>
         <MudSwitch 
             @bind-Value="Model.Active" 
@@ -27,7 +24,7 @@
             ThumbIcon="@Icons.Material.Filled.CloudDone"
             >Active</MudSwitch>
     </div>
-    <div class="mb-8">@Id</div>
+    
 
     <div class="data-record">
         <MudTextField @bind-Value="Model.HostName" For="() => Model.Host"
@@ -110,6 +107,8 @@
     {
         if (!firstRender) 
             return;
+
+        appDataService.SetTitle(localizer);
 
         if (!await LoadData())
         {

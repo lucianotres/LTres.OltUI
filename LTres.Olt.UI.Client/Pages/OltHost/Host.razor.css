@@ -6,6 +6,9 @@
 .data-header > ::deep * {
     flex: 1;
 }
+.data-header > ::deep span {
+    opacity: .3;
+}
 .data-header > ::deep div:nth-child(2) {
     flex: 0;
 }

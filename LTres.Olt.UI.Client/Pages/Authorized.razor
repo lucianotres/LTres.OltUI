@@ -1,10 +1,16 @@
 @page "/Authorized"
 @attribute [Authorize]
-
-<PageTitle>Authorized View</PageTitle>
+@inject AppDataService appDataService
 
 <h1>You are authorized!</h1>
 
 <AuthorizeView>
     <p>@context.User.Identity?.Name</p>
 </AuthorizeView>
+
+@code {
+    protected override void OnAfterRender(bool firstRender)
+    {
+        appDataService.SetTitle("Authorized View");
+    }
+}

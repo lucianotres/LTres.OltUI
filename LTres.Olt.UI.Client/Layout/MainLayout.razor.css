@@ -2,9 +2,25 @@ main {
     
 }
 
+.app-bar-title {
+    display: flex;
+    flex-flow: column;
+}
+.app-bar-title > ::deep * {
+    line-height: normal !important;
+}
+.app-bar-title > ::deep span {
+    display: none;
+}
+
 @media (min-width: 641px) {
     article {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
+    }
+
+    .app-bar-title > ::deep span {
+        display: inline-block;
+        margin: 0;
     }
 }

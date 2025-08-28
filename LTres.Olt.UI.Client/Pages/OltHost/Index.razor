@@ -7,11 +7,6 @@
 @inject DialogTools dialog
 @inject ToastTools toast
 
-<PageTitle>@localizer.GetTitle()</PageTitle>
-
-<MudText Typo="Typo.h3">@localizer["Title"]</MudText>
-<MudText Typo="Typo.h6" Class="mb-4">@localizer["Description"]</MudText>
-
 <div class="data-list">
     @foreach(var host in _Hosts) {
         <MudCard @key="host.Id" Outlined="true" Square="false">
@@ -44,7 +39,10 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
+        {
+            appDataService.SetTitle(localizer);
             await LoadData();
+        }
     }
 
     private async Task LoadData() 

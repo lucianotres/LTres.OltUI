@@ -1,8 +1,8 @@
 @page "/"
 @using System.Globalization
 @inject AppPageLocalizer<Home> localizer
+@inject AppDataService appDataService
 
-<PageTitle>@localizer.GetTitle()</PageTitle>
 
 <h1>Hello, world!</h1>
 
@@ -11,3 +11,11 @@
 </div>
 
 Welcome to your new app.
+
+@code {
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+            appDataService.SetTitle(localizer);
+    }
+}

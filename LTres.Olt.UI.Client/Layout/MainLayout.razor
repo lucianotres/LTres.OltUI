@@ -8,10 +8,15 @@
 <MudLayout>
     <MudAppBar Elevation="1" Dense="true">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+        <div class="app-bar-title">
+            <MudText Typo="Typo.h6">@appDataService.Title</MudText>
+            <MudText Typo="Typo.caption">@appDataService.Description</MudText>
+        </div>
         <MudSpacer />
         <LoginDisplay />
         <MudSwitch @bind-Value="@isDark" Color="Color.Primary" Class="ma-4" ThumbIcon="@Icons.Material.Filled.DarkMode" />
-        @if (appDataService.Loading) {
+        @if (appDataService.Loading) 
+        {
             <MudProgressLinear Indeterminate="true" Color="Color.Default" Rounded="false" Striped="false" Size="Size.Small" Class="pgb-loading" />
         }
     </MudAppBar>

@@ -1,9 +1,8 @@
 @page "/Login"
 @using LTres.Olt.UI.Client.Services
 @inject AppPageLocalizer<Login> localizer
+@inject AppDataService appDataService
 @inject AuthenticationStateProvider authenticationStateProvider
-
-<PageTitle>@localizer.GetTitle("Login")</PageTitle>
 
 <div class="enter-with">
     @foreach (var scheme in SchemesList)
@@ -30,5 +29,11 @@
         
         if (hostAuthStateProvider != null)
             SchemesList = await hostAuthStateProvider.GetSchemesList();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+            appDataService.SetTitle(localizer);
     }
 }
