@@ -1,6 +1,7 @@
 @page "/OltHost/{id:guid}"
 @page "/OltHost/new"
 @using LTres.Olt.UI.Shared.Models
+@using System.Reflection.Emit
 @attribute [Authorize]
 @inject AppPageLocalizer<Host> localizer
 @inject OLTServices oltServices
@@ -10,7 +11,7 @@
 @inject ToastTools toast
 @inject NavigationManager navigation
 
-<EditForm Model="@Model" OnValidSubmit="HandleSubmit">
+<EditForm EditContext="@editContext">
     <DataAnnotationsValidator />
 
     <div class="data-header">
@@ -81,6 +82,27 @@
                 Color="@Color.Primary"
                 >SNMP Bulk</MudSwitch>
         </div>
+
+        <div class="tags">
+            <MudAutocomplete @bind-Value="NewTag" 
+                Label="@localizer["AddTag"]"
+                HelperText="@localizer["AddTagDesc"]"
+                CoerceValue="true"
+                ResetValueOnEmptyText="true"
+                SelectValueOnTab="true"
+                InputMode="InputMode.text"
+                KeyDownPreventDefault="false"
+                OnKeyDown="HandleNewTagKeyDown" />
+            <MudChipSet T="string" AllClosable OnClose="HandleRemoveTag">
+                @if (Model.tags != null)
+                {
+                    @foreach (var tag in Model.tags)
+                    {
+                        <MudChip Text="@tag"></MudChip>
+                    }
+                }
+            </MudChipSet>
+        </div>
     </div>
 
     <div class="data-actions">
@@ -88,7 +110,7 @@
             Disabled="@appDataService.Loading"
             StartIcon="@Icons.Material.Filled.Save"
             Color="@Color.Success"
-            ButtonType="ButtonType.Submit">@localizer["Save"]</MudButton>
+            OnClick="HandleSubmit">@localizer["Save"]</MudButton>
         <MudButton Variant="Variant.Filled"
             Disabled="@appDataService.Loading"
             StartIcon="@Icons.Material.Filled.Cancel"
@@ -101,7 +123,27 @@
     [Parameter]
     public Guid? Id { get; set; }
 
-    public OLT_Host Model { get; private set; } = new();
+    public OLT_Host Model 
+    { 
+        get => _Model;
+        private set 
+        {
+            _Model = value;
+            editContext = new EditContext(_Model);
+        }
+    }
+    private OLT_Host _Model = new();
+
+    private EditContext? editContext;
+
+    public string NewTag { get; set; } = string.Empty;
+
+
+
+    protected override void OnInitialized()
+    {
+        editContext = new(_Model);
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -188,15 +230,38 @@
 
     private async Task HandleSubmit()
     {
+        if (editContext == null || !editContext.Validate())
+            return;
+
         var saved = await SaveData();
 
         if (saved == true)
             toast.Success(string.Format(localizer["SavedMsg"], Model.Name));
-                
+
         if (saved == false)
             toast.Error(localizer["SaveError"]);
 
         if (saved.GetValueOrDefault(true))
             navigation.NavigateTo("/OltHost");
+    }
+
+    private void HandleNewTagKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            if (!(Model?.tags?.Contains(NewTag) ?? true))
+                Model?.tags?.Add(NewTag);
+
+            NewTag = string.Empty;
+        }
+    }
+
+    private void HandleRemoveTag(MudChip<string> args)
+    {
+        if (args.Text != null)
+        {
+            Model?.tags?.Remove(args.Text);
+            StateHasChanged();
+        }
     }
 }

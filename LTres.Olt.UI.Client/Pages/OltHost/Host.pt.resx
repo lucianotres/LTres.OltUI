@@ -161,4 +161,12 @@
     <value>(novo)</value>
     <comment/>
   </data>
+  <data name="AddTag" xml:space="preserve">
+    <value>Adicionar tag</value>
+    <comment/>
+  </data>
+  <data name="AddTagDesc" xml:space="preserve">
+    <value>Digite e tecle &lt;enter&gt;</value>
+    <comment/>
+  </data>
 </root>

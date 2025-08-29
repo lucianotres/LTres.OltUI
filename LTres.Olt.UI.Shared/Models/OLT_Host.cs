@@ -19,7 +19,7 @@ public class OLT_Host
     public bool? Active { get; set; }
 
 
-    public IEnumerable<string>? tags { get; set; }
+    public IList<string>? tags { get; set; }
     public OLT_Host_OnuRef? OnuRef { get; set; }
     public OLT_Host_CLIconfig? CLI { get; set; }
 
