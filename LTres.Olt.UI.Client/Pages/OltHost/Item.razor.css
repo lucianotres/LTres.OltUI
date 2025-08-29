@@ -3,6 +3,18 @@
         padding-inline-start: 2px;
         padding-inline-end: 2px;
     }
+    ::deep .item-table .mud-table-cell:last-child {
+        padding-right: 12px;
+        padding-inline-end: 12px;
+    }
+
+    ::deep .item-table th:nth-child(8), ::deep .item-table td:nth-child(8) {
+        width: 40px;
+    }
+}
+
+::deep .item-table th {
+    font-weight: 700 !important;
 }
 
 ::deep .item-table th:nth-child(1), ::deep .item-table td:nth-child(1) {

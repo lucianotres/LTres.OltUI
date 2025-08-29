@@ -9,7 +9,7 @@
 @inject ToastTools toast
 
 <div>
-    <MudTable Items="@Items" Dense="true" Class="item-table">
+    <MudTable ServerData="ServerDataLoad" Dense="true" Class="item-table">
         <HeaderContent>
             <MudTh>@localizer["Action"]</MudTh>
             <MudTh>@localizer["ItemKey"]</MudTh>
@@ -18,6 +18,7 @@
             <MudTh>@localizer["Maintain"]</MudTh>            
             <MudTh>@localizer["Active"]</MudTh>
             <MudTh>@localizer["DescriptionCol"]</MudTh>
+            <MudTh></MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="@localizer["Action"]"><OltItemAction Action="@context.Action" /></MudTd>
@@ -27,6 +28,13 @@
             <MudTd DataLabel="@localizer["Maintain"]">@(context.MaintainFor.HasValue ? context.MaintainFor.Value.ToStrFromMinutes() : null)</MudTd>
             <MudTd DataLabel="@localizer["Active"]"><ActiveInactiveIcon Active="@context.Active" /></MudTd>
             <MudTd DataLabel="@localizer["DescriptionCol"]">@context.Description</MudTd>
+            <MudTd>
+                <MudMenu Icon="@Icons.Material.Filled.MoreVert" Size="Size.Small" AriaLabel="Open user menu">
+                    <MudMenuItem Icon="@Icons.Material.Filled.Edit" Label="Edit" />
+                    <MudMenuItem Icon="@Icons.Material.Filled.Delete" Label="Delete" />
+                    <MudMenuItem Label="Active / Inactive" />
+                </MudMenu>
+            </MudTd>
         </RowTemplate>
     </MudTable>
 </div>
@@ -36,39 +44,22 @@
     [Parameter]
     public Guid? Id { get; set; }
 
-    public IList<OLT_Host_Item> Items { get; set; } = new List<OLT_Host_Item>();
 
     protected override void OnInitialized()
     {
         appDataService.SetTitle(localizer);
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (!firstRender) 
-            return;
-
-        await LoadData();
-    }
-
-    private async Task<bool> LoadData()
+    private async Task<TableData<OLT_Host_Item>> ServerDataLoad(TableState state, CancellationToken token)
     {
         if (!Id.HasValue)
-            return false;
+            return new TableData<OLT_Host_Item>() { TotalItems = 0 };
 
-        try
-        {
-            appDataService.Loading = true;
-            StateHasChanged();
+        var result = await oltServices.GetHostItems(Id!.Value);
 
-            var result = await oltServices.GetHostItems(Id.Value);
-            Items = result ?? new List<OLT_Host_Item>();
-            return result != null;
-        }
-        finally
-        {
-            appDataService.Loading = false;
-            StateHasChanged();
-        }
+        if (result == null)
+            return new TableData<OLT_Host_Item>() { TotalItems = 0 };
+        else
+            return new TableData<OLT_Host_Item>() { TotalItems = result.Count, Items = result };
     }
 }
