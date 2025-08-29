@@ -1,17 +1,11 @@
 .data-list {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 16px;
-    flex-wrap: wrap;
-}
-
-.data-list > ::deep div {
-    flex: 1;
-    min-width: 100%;
 }
 
 @media (min-width: 641px) {
-    .data-list > ::deep div {
-        min-width: 400px;
+    .data-list {
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     }
 }
