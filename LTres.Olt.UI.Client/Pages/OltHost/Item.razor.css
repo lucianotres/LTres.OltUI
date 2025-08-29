@@ -1,0 +1,12 @@
+::deep .item-table .mud-table-cell {
+    padding-inline-start: 2px;
+    padding-inline-end: 2px;
+}
+
+::deep .item-table th:nth-child(1), ::deep .item-table td:nth-child(1) {
+    text-align: center;
+}
+
+::deep .item-table th:nth-child(6), ::deep .item-table td:nth-child(6) {
+    text-align: center;
+}

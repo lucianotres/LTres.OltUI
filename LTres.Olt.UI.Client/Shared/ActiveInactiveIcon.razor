@@ -1,0 +1,13 @@
+@if (Active)
+{
+    <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Color="@Color.Success" />
+}
+else
+{
+    <MudIcon Icon="@Icons.Material.Filled.Block" Size="Size.Small" Color="@Color.Error" />
+}
+
+@code {
+    [Parameter]
+    public bool Active { get; set; } = false;
+}

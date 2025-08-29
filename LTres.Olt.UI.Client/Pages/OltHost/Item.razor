@@ -8,15 +8,28 @@
 @inject DialogTools dialog
 @inject ToastTools toast
 
-<MudTable Items="@Items"
-    Dense="true">
-    <HeaderContent>
-        <MudTh>Test</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Test">@context.Description</MudTd>
-    </RowTemplate>
-</MudTable>
+<div>
+    <MudTable Items="@Items" Dense="true" Class="item-table">
+        <HeaderContent>
+            <MudTh>Action</MudTh>
+            <MudTh>Key</MudTh>
+            <MudTh>Interval</MudTh>
+            <MudTh>Maintain</MudTh>
+            <MudTh>History</MudTh>
+            <MudTh>Active</MudTh>
+            <MudTh>Description</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Action"><OltItemAction Action="@context.Action" /></MudTd>
+            <MudTd DataLabel="Key">@context.ItemKey</MudTd>
+            <MudTd DataLabel="Interval">@context.Interval</MudTd>
+            <MudTd DataLabel="Maintain">@context.MaintainFor</MudTd>
+            <MudTd DataLabel="History">@context.HistoryFor</MudTd>
+            <MudTh DateLabel="Active"><ActiveInactiveIcon Active="@context.Active" /></MudTh>
+            <MudTd DataLabel="Test">@context.Description</MudTd>
+        </RowTemplate>
+    </MudTable>
+</div>
 
 @code 
 {

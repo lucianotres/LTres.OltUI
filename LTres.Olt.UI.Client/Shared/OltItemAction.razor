@@ -1,0 +1,23 @@
+@using LTres.Olt.UI.Shared.Models
+
+@if (Action == OLT_Host_ItemExtensions.ActionPing)
+{
+    <MudIcon Icon="@Icons.Material.Filled.NetworkPing" Size="Size.Small" Color="@Color.Default" />
+}
+else if (Action == OLT_Host_ItemExtensions.ActionSnmpGet)
+{
+    <MudIcon Icon="@Icons.Material.Filled.Feed" Size="Size.Small" Color="@Color.Default" />
+}
+else if (Action == OLT_Host_ItemExtensions.ActionSnmpWalk)
+{
+    <MudIcon Icon="@Icons.Material.Filled.DynamicFeed" Size="Size.Small" Color="@Color.Default" />
+}
+else
+{
+    <MudIcon Icon="@Icons.Material.Filled.Assignment" Size="Size.Small" Color="@Color.Default" />
+}
+
+@code {
+    [Parameter]
+    public string Action { get; set; } = string.Empty;
+}

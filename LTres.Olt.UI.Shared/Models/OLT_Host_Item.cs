@@ -28,7 +28,11 @@ public class OLT_Host_Item
 
 public static class OLT_Host_ItemExtensions
 {
-    public static readonly string[] ValidActions = new []{ "ping", "snmpget", "snmpwalk" };
+    public const string ActionPing = "ping";
+    public const string ActionSnmpGet = "snmpget";
+    public const string ActionSnmpWalk = "snmpwalk";
+
+    public static readonly string[] ValidActions = [ActionPing, ActionSnmpGet, ActionSnmpWalk];
 
     public const int MinInterval = 1;
     public const int MaxInterval = 86400; //1 day 
