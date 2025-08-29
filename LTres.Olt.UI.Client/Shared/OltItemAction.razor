@@ -2,19 +2,19 @@
 
 @if (Action == OLT_Host_ItemExtensions.ActionPing)
 {
-    <MudIcon Icon="@Icons.Material.Filled.NetworkPing" Size="Size.Small" Color="@Color.Default" />
+    <MudIcon Icon="@Icons.Material.Filled.NetworkPing" Size="Size.Small" Color="@Color.Default" Title="Ping" />
 }
 else if (Action == OLT_Host_ItemExtensions.ActionSnmpGet)
 {
-    <MudIcon Icon="@Icons.Material.Filled.Feed" Size="Size.Small" Color="@Color.Default" />
+    <MudIcon Icon="@Icons.Material.Filled.Feed" Size="Size.Small" Color="@Color.Default" Title="SNMP Get" />
 }
 else if (Action == OLT_Host_ItemExtensions.ActionSnmpWalk)
 {
-    <MudIcon Icon="@Icons.Material.Filled.DynamicFeed" Size="Size.Small" Color="@Color.Default" />
+    <MudIcon Icon="@Icons.Material.Filled.DynamicFeed" Size="Size.Small" Color="@Color.Default" Title="SNMP Walk" />
 }
 else
 {
-    <MudIcon Icon="@Icons.Material.Filled.Assignment" Size="Size.Small" Color="@Color.Default" />
+    <MudIcon Icon="@Icons.Material.Filled.Assignment" Size="Size.Small" Color="@Color.Default" Title="@Action" />
 }
 
 @code {
