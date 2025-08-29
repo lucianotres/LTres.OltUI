@@ -42,4 +42,27 @@ public static class OLT_Host_ItemExtensions
 
     public const int MinMaintainFor = 0; //0 is for not maintain at failed read 
     public const int MaxMaintainFor = 2628000; //5 years
+
+    private static string TimeSpanToStringCustom(TimeSpan timeSpan)
+    {
+        List<string> parts = new();
+
+        if (timeSpan.Days > 0)
+            parts.Add($"{timeSpan.Days}d");
+
+        if (timeSpan.Hours > 0)
+            parts.Add($"{timeSpan.Hours}h");
+
+        if (timeSpan.Minutes > 0)
+            parts.Add($"{timeSpan.Minutes}m");
+
+        if (timeSpan.Seconds > 0)
+            parts.Add($"{timeSpan.Seconds}s");
+
+        return string.Join(" ", parts);
+    }
+
+    public static string ToStrFromSeconds(this int seconds) => TimeSpanToStringCustom(TimeSpan.FromSeconds(seconds));
+
+    public static string ToStrFromMinutes(this int minutes) => TimeSpanToStringCustom(TimeSpan.FromMinutes(minutes));
 }

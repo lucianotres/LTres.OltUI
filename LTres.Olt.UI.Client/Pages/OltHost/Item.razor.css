@@ -1,6 +1,8 @@
-::deep .item-table .mud-table-cell {
-    padding-inline-start: 2px;
-    padding-inline-end: 2px;
+@media (min-width: 641px) {
+    ::deep .item-table .mud-table-cell {
+        padding-inline-start: 2px;
+        padding-inline-end: 2px;
+    }
 }
 
 ::deep .item-table th:nth-child(1), ::deep .item-table td:nth-child(1) {

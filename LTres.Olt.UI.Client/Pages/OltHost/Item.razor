@@ -11,22 +11,22 @@
 <div>
     <MudTable Items="@Items" Dense="true" Class="item-table">
         <HeaderContent>
-            <MudTh>Action</MudTh>
-            <MudTh>Key</MudTh>
-            <MudTh>Interval</MudTh>
-            <MudTh>Maintain</MudTh>
-            <MudTh>History</MudTh>
-            <MudTh>Active</MudTh>
-            <MudTh>Description</MudTh>
+            <MudTh>@localizer["Action"]</MudTh>
+            <MudTh>@localizer["ItemKey"]</MudTh>
+            <MudTh>@localizer["Interval"]</MudTh>
+            <MudTh>@localizer["History"]</MudTh>
+            <MudTh>@localizer["Maintain"]</MudTh>            
+            <MudTh>@localizer["Active"]</MudTh>
+            <MudTh>@localizer["DescriptionCol"]</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Action"><OltItemAction Action="@context.Action" /></MudTd>
-            <MudTd DataLabel="Key">@context.ItemKey</MudTd>
-            <MudTd DataLabel="Interval">@context.Interval</MudTd>
-            <MudTd DataLabel="Maintain">@context.MaintainFor</MudTd>
-            <MudTd DataLabel="History">@context.HistoryFor</MudTd>
-            <MudTh DateLabel="Active"><ActiveInactiveIcon Active="@context.Active" /></MudTh>
-            <MudTd DataLabel="Test">@context.Description</MudTd>
+            <MudTd DataLabel="@localizer["Action"]"><OltItemAction Action="@context.Action" /></MudTd>
+            <MudTd DataLabel="@localizer["ItemKey"]">@context.ItemKey</MudTd>
+            <MudTd DataLabel="@localizer["Interval"]">@(context.Interval.HasValue ? context.Interval.Value.ToStrFromSeconds() : null)</MudTd>
+            <MudTd DataLabel="@localizer["History"]">@(context.HistoryFor.HasValue ? context.HistoryFor.Value.ToStrFromMinutes() : null)</MudTd>
+            <MudTd DataLabel="@localizer["Maintain"]">@(context.MaintainFor.HasValue ? context.MaintainFor.Value.ToStrFromMinutes() : null)</MudTd>
+            <MudTd DataLabel="@localizer["Active"]"><ActiveInactiveIcon Active="@context.Active" /></MudTd>
+            <MudTd DataLabel="@localizer["DescriptionCol"]">@context.Description</MudTd>
         </RowTemplate>
     </MudTable>
 </div>
