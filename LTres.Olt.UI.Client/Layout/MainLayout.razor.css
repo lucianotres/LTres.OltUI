@@ -21,6 +21,7 @@ article {
 .app-bar-title {
     display: flex;
     flex-flow: column;
+    margin-left: 4px;
 }
 .app-bar-title > ::deep * {
     line-height: normal !important;
