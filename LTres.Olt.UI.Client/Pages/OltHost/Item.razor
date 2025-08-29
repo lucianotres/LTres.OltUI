@@ -8,6 +8,18 @@
 @inject DialogTools dialog
 @inject ToastTools toast
 
+<MudToolBar Dense="true">
+    <MudButton Variant="@Variant.Filled" 
+        StartIcon="@Icons.Material.Filled.ArrowCircleLeft"
+        OnClick='async () => await js.InvokeVoidAsync("history.back")'
+        >@localizer["Return"]</MudButton>
+    <MudSpacer />
+    <MudButton Variant="@Variant.Filled" 
+        EndIcon="@Icons.Material.Filled.AddCircle"
+        Href="/OltHost/new"
+        >@localizer["New"]</MudButton>
+</MudToolBar>
+
 <div>
     <MudTable ServerData="ServerDataLoad" Dense="true" Class="item-table">
         <HeaderContent>
@@ -30,7 +42,7 @@
             <MudTd DataLabel="@localizer["DescriptionCol"]">@context.Description</MudTd>
             <MudTd>
                 <MudMenu Icon="@Icons.Material.Filled.MoreVert" Size="Size.Small" AriaLabel="Open user menu">
-                    <MudMenuItem Icon="@Icons.Material.Filled.Edit" Label="Edit" />
+                    <MudMenuItem Icon="@Icons.Material.Filled.Edit" Label="Edit" Href="@($"/OltHost/Item/Edit/{context.Id}")" />
                     <MudMenuItem Icon="@Icons.Material.Filled.Delete" Label="Delete" />
                     <MudMenuItem Label="Active / Inactive" />
                 </MudMenu>

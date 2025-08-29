@@ -1,0 +1,24 @@
+@page "/OltHost/Item/Edit/{id:guid}"
+@using LTres.Olt.UI.Shared.Models
+@attribute [Authorize]
+@inject AppPageLocalizer<Item> localizer
+@inject OLTServices oltServices
+@inject AppDataService appDataService
+@inject IJSRuntime js
+@inject DialogTools dialog
+@inject ToastTools toast
+
+<div>
+    @Id
+</div>
+
+@code {
+    [Parameter]
+    public Guid? Id { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        appDataService.SetTitle(localizer);
+    }
+}

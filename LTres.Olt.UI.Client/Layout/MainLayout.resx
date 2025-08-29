@@ -145,4 +145,8 @@
     <value>New</value>
     <comment/>
   </data>
+  <data name="Return" xml:space="preserve">
+    <value>Return</value>
+    <comment/>
+  </data>
 </root>

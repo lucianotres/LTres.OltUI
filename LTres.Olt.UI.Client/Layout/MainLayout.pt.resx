@@ -141,4 +141,8 @@
     <value>Novo</value>
     <comment/>
   </data>
+  <data name="Return" xml:space="preserve">
+    <value>Voltar</value>
+    <comment/>
+  </data>
 </root>
