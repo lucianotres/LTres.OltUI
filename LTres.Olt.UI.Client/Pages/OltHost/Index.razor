@@ -33,6 +33,9 @@
                 <MudTooltip Text="@localizer["Edit"]" Arrow="true">
                     <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" Href="@($"/OltHost/{host.Id}")" />
                 </MudTooltip>
+                <MudTooltip Text="@localizer["Items"]" Arrow="true">
+                    <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" Href="@($"/OltItem/{host.Id}")" />
+                </MudTooltip>
                 <MudTooltip Text="@localizer["Delete"]" Arrow="true">
                     <MudIconButton Icon="@Icons.Material.Filled.DeleteForever" Color="Color.Default" OnClick="() => HandleDeleteHost(host)" />
                 </MudTooltip>

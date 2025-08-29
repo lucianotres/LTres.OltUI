@@ -1,0 +1,61 @@
+@page "/OltItem/{id:guid}"
+@using LTres.Olt.UI.Shared.Models
+@attribute [Authorize]
+@inject AppPageLocalizer<Item> localizer
+@inject OLTServices oltServices
+@inject AppDataService appDataService
+@inject IJSRuntime js
+@inject DialogTools dialog
+@inject ToastTools toast
+
+<MudTable Items="@Items"
+    Dense="true">
+    <HeaderContent>
+        <MudTh>Test</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Test">@context.Description</MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code 
+{
+    [Parameter]
+    public Guid? Id { get; set; }
+
+    public IList<OLT_Host_Item> Items { get; set; } = new List<OLT_Host_Item>();
+
+    protected override void OnInitialized()
+    {
+        appDataService.SetTitle(localizer);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) 
+            return;
+
+        await LoadData();
+    }
+
+    private async Task<bool> LoadData()
+    {
+        if (!Id.HasValue)
+            return false;
+
+        try
+        {
+            appDataService.Loading = true;
+            StateHasChanged();
+
+            var result = await oltServices.GetHostItems(Id.Value);
+            Items = result ?? new List<OLT_Host_Item>();
+            return result != null;
+        }
+        finally
+        {
+            appDataService.Loading = false;
+            StateHasChanged();
+        }
+    }
+}
