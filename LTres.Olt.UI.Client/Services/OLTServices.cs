@@ -49,4 +49,13 @@ public class OLTServices(IHttpClientFactory clientFactory)
             await result.Content.ReadFromJsonAsync<IList<OLT_Host_Item>>() :
             null;
     }
+
+    public async Task<OLT_Host_Item?> GetHostItem(Guid itemId)
+    {
+        var result = await _client.GetAsync($"OLTHostItem/{itemId}");
+        return result.StatusCode == System.Net.HttpStatusCode.OK ?
+            await result.Content.ReadFromJsonAsync<OLT_Host_Item>() :
+            null;
+    }
+    
 }

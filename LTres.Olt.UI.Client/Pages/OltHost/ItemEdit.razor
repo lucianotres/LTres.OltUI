@@ -1,24 +1,146 @@
 @page "/OltHost/Item/Edit/{id:guid}"
 @using LTres.Olt.UI.Shared.Models
 @attribute [Authorize]
-@inject AppPageLocalizer<Item> localizer
+@inject AppPageLocalizer<ItemEdit> localizer
 @inject OLTServices oltServices
 @inject AppDataService appDataService
 @inject IJSRuntime js
 @inject DialogTools dialog
 @inject ToastTools toast
 
-<div>
-    @Id
-</div>
+<MudToolBar Dense="true">
+    <MudButton Variant="@Variant.Filled" 
+        StartIcon="@Icons.Material.Filled.ArrowCircleLeft"
+        OnClick='async () => await js.InvokeVoidAsync("history.back")'
+        >@localizer["Return"]</MudButton>
+    <MudSpacer />
+</MudToolBar>
+
+@if (Model == null)
+{
+    <div>Nothing to show</div>
+}
+else
+{
+    
+    <div class="data-header">
+        <MudText Typo="Typo.caption" Color="@Color.Default">
+            @(Id?.ToString() ?? localizer["NewItem"])
+        </MudText>
+        <MudSwitch @bind-Value="Model.Active" 
+            Disabled="@appDataService.Loading"
+            Color="Color.Primary" 
+            ThumbIcon="@Icons.Material.Filled.CloudDone"
+            >Active</MudSwitch>
+    </div>
+
+    <div class="data-record">
+        <MudTextField @bind-Value="Model.Description" For="() => Model.Description"
+            Disabled="@appDataService.Loading"
+            Label="@localizer["ItemDescription"]" 
+            Variant="Variant.Text" 
+            Adornment="Adornment.End" 
+            AdornmentIcon="@Icons.Material.Filled.Abc"
+            HelperText="@localizer["ItemDescriptionDesc"]" />
+
+        <MudSelect @bind-Value="Model.Action" For="() => Model.Action"
+            Disabled="@appDataService.Loading"
+            Label="@localizer["Action"]"
+            HelperText="@localizer["ActionDesc"]"
+            Variant="@Variant.Text">
+            @foreach(var i in OLT_Host_ItemExtensions.ValidActions)
+            {
+                <MudSelectItem Value="@i">
+                    <OltItemAction Action="@i" /><span class="ml-3">@i</span>
+                </MudSelectItem>
+            }
+        </MudSelect>
+
+        <MudTextField @bind-Value="Model.ItemKey" For="() => Model.ItemKey"
+            Disabled="@appDataService.Loading"
+            Label="@localizer["ItemKey"]" 
+            Variant="Variant.Text" 
+            Adornment="Adornment.End" 
+            AdornmentIcon="@Icons.Material.Filled.Abc"
+            HelperText="@localizer["ItemKeyDesc"]" />
+
+        <MudNumericField @bind-Value="Model.Interval" 
+            Disabled="@appDataService.Loading"
+            Label="@localizer["Interval"]" 
+            Variant="Variant.Text" 
+            Adornment="Adornment.End" 
+            AdornmentIcon="@Icons.Material.Filled.Pin"
+            HelperText="@localizer["IntervalDesc"]"
+            Min="@OLT_Host_ItemExtensions.MinInterval" Max="@OLT_Host_ItemExtensions.MaxInterval" Step="1" />
+
+        <MudNumericField @bind-Value="Model.HistoryFor" 
+            Disabled="@appDataService.Loading"
+            Label="@localizer["HistoryFor"]" 
+            Variant="Variant.Text" 
+            Adornment="Adornment.End" 
+            AdornmentIcon="@Icons.Material.Filled.Pin"
+            HelperText="@localizer["HistoryForDesc"]"
+            Min="@OLT_Host_ItemExtensions.MinHistoryFor" Max="@OLT_Host_ItemExtensions.MaxHistoryFor" Step="1" />
+
+        <MudNumericField @bind-Value="Model.MaintainFor" 
+            Disabled="@appDataService.Loading"
+            Label="@localizer["MaintainFor"]" 
+            Variant="Variant.Text" 
+            Adornment="Adornment.End" 
+            AdornmentIcon="@Icons.Material.Filled.Pin"
+            HelperText="@localizer["MaintainForDesc"]"
+            Min="@OLT_Host_ItemExtensions.MinMaintainFor" Max="@OLT_Host_ItemExtensions.MaxMaintainFor" Step="1" />
+
+        <MudSwitch @bind-Value="Model.Template" 
+            Disabled="@appDataService.Loading"
+            Color="Color.Primary" 
+            ThumbIcon="@Icons.Material.Filled.AccountTree"
+            >@(Model.Template.GetValueOrDefault() ? "Template" : "Normal")</MudSwitch>
+
+        <MudTextField @bind-Value="Model.Calc" For="() => Model.Calc"
+            Disabled="@appDataService.Loading"
+            Label="@localizer["Calc"]" 
+            Variant="Variant.Text" 
+            Adornment="Adornment.End" 
+            AdornmentIcon="@Icons.Material.Filled.Abc"
+            HelperText="@localizer["CalcDesc"]" />
+        
+    </div>
+}
 
 @code {
     [Parameter]
     public Guid? Id { get; set; }
 
-
+    public OLT_Host_Item? Model { get; private set; }
+    
     protected override void OnInitialized()
     {
         appDataService.SetTitle(localizer);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        if (!Id.HasValue)
+            return;
+
+        try
+        {
+            appDataService.Loading = true;
+            StateHasChanged();
+
+            Model = await oltServices.GetHostItem(Id.Value);
+        }
+        finally
+        {
+            appDataService.Loading = false;
+            StateHasChanged();
+        }
     }
 }

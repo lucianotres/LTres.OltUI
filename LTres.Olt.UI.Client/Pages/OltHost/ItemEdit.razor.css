@@ -1,0 +1,63 @@
+.data-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.data-header > ::deep * {
+    flex: 1;
+}
+.data-header > ::deep span {
+    opacity: .3;
+}
+.data-header > ::deep div:nth-child(2) {
+    flex: 0;
+}
+
+
+.data-record {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: auto;
+    gap: 24px;
+}
+
+.data-record > ::deep div:nth-child(1) {
+    grid-row: 1;
+    grid-column: 1 / span 6;
+}
+
+.data-record > ::deep div:nth-child(2) {
+    grid-row: 2;
+    grid-column: 1 / 1;
+}
+
+.data-record > ::deep div:nth-child(3) {
+    grid-row: 2;
+    grid-column: 2 / span 5;
+}
+
+.data-record > ::deep div:nth-child(4) {
+    grid-row: 3;
+    grid-column: 1 / span 2;
+}
+
+.data-record > ::deep div:nth-child(5) {
+    grid-row: 3;
+    grid-column: 3 / span 2;
+}
+
+.data-record > ::deep div:nth-child(6) {
+    grid-row: 3;
+    grid-column: 5 / span 2;
+}
+
+.data-record > ::deep div:nth-child(7) {
+    grid-row: 4;
+    grid-column: 1;
+    align-self: center;
+}
+
+.data-record > ::deep div:nth-child(8) {
+    grid-row: 4;
+    grid-column: 2 / span 3;
+}
