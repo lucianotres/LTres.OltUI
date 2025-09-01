@@ -80,7 +80,8 @@ else
             Adornment="Adornment.End" 
             AdornmentIcon="@Icons.Material.Filled.Pin"
             HelperText="@localizer["HistoryForDesc"]"
-            Min="@OLT_Host_ItemExtensions.MinHistoryFor" Max="@OLT_Host_ItemExtensions.MaxHistoryFor" Step="1" />
+            Min="@OLT_Host_ItemExtensions.MinHistoryFor" Max="@OLT_Host_ItemExtensions.MaxHistoryFor" Step="1" 
+            Clearable="true"/>
 
         <MudNumericField @bind-Value="Model.MaintainFor" 
             Disabled="@appDataService.Loading"
@@ -89,7 +90,8 @@ else
             Adornment="Adornment.End" 
             AdornmentIcon="@Icons.Material.Filled.Pin"
             HelperText="@localizer["MaintainForDesc"]"
-            Min="@OLT_Host_ItemExtensions.MinMaintainFor" Max="@OLT_Host_ItemExtensions.MaxMaintainFor" Step="1" />
+            Min="@OLT_Host_ItemExtensions.MinMaintainFor" Max="@OLT_Host_ItemExtensions.MaxMaintainFor" Step="1" 
+            Clearable="true" />
 
         <MudSwitch @bind-Value="Model.Template" 
             Disabled="@appDataService.Loading"

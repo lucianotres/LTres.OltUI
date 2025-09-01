@@ -18,9 +18,22 @@
 }
 
 ::deep .item-table th:nth-child(1), ::deep .item-table td:nth-child(1) {
-    text-align: center;
+    text-align: left;
 }
 
 ::deep .item-table th:nth-child(6), ::deep .item-table td:nth-child(6) {
     text-align: center;
+}
+
+::deep .item-table .is-template td {
+    font-style: italic;
+}
+
+@media (min-width: 641px) {
+    ::deep .item-table th:nth-child(1), ::deep .item-table td:nth-child(1) {
+        padding-left: 0.6em;
+    }
+    ::deep .item-table .is-template td:nth-child(1) {
+        padding-left: 2.5em;
+    }
 }

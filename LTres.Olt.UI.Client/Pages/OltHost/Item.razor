@@ -21,7 +21,7 @@
 </MudToolBar>
 
 <div>
-    <MudTable ServerData="ServerDataLoad" Dense="true" Class="item-table">
+    <MudTable ServerData="ServerDataLoad" Dense="true" Class="item-table" RowClassFunc="RowClassCustomized">
         <HeaderContent>
             <MudTh>@localizer["Action"]</MudTh>
             <MudTh>@localizer["ItemKey"]</MudTh>
@@ -67,11 +67,28 @@
         if (!Id.HasValue)
             return new TableData<OLT_Host_Item>() { TotalItems = 0 };
 
-        var result = await oltServices.GetHostItems(Id!.Value);
-
-        if (result == null)
+        var serverDataList = await oltServices.GetHostItems(Id!.Value);       
+        if (serverDataList == null)
             return new TableData<OLT_Host_Item>() { TotalItems = 0 };
-        else
-            return new TableData<OLT_Host_Item>() { TotalItems = result.Count, Items = result };
+        
+        var normalList = serverDataList
+            .Where(w => !w.Template.GetValueOrDefault())
+            .OrderBy(k => k.ItemKey)
+            .ToList();
+
+        var finalList = new List<OLT_Host_Item>();
+        foreach(var x in normalList)
+        {
+            finalList.Add(x);
+            finalList.AddRange(serverDataList
+                .Where(w => w.From == x.Id && w.Template == true)
+                .OrderBy(k => k.ItemKey));
+        }        
+
+        return new TableData<OLT_Host_Item>() { TotalItems = finalList.Count, Items = finalList };
     }
-}
+
+    private string RowClassCustomized(OLT_Host_Item item, int index) 
+        => item.Template.GetValueOrDefault() ? "is-template" : "is-normal";
+
+}        
