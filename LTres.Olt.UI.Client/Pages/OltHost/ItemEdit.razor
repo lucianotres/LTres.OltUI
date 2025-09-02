@@ -93,12 +93,6 @@ else
             Min="@OLT_Host_ItemExtensions.MinMaintainFor" Max="@OLT_Host_ItemExtensions.MaxMaintainFor" Step="1" 
             Clearable="true" />
 
-        <MudSwitch @bind-Value="Model.Template" 
-            Disabled="@appDataService.Loading"
-            Color="Color.Primary" 
-            ThumbIcon="@Icons.Material.Filled.AccountTree"
-            >@(Model.Template.GetValueOrDefault() ? "Template" : "Normal")</MudSwitch>
-
         <MudTextField @bind-Value="Model.Calc" For="() => Model.Calc"
             Disabled="@appDataService.Loading"
             Label="@localizer["Calc"]" 
