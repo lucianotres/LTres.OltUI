@@ -16,12 +16,8 @@
     <MudSpacer />
 </MudToolBar>
 
-@if (Model == null)
-{
-    <div>Nothing to show</div>
-}
-else
-{
+<EditForm EditContext="@editContext">
+    <DataAnnotationsValidator />
     
     <div class="data-header">
         <MudText Typo="Typo.caption" Color="@Color.Default">
@@ -99,19 +95,34 @@ else
             Variant="Variant.Text" 
             Adornment="Adornment.End" 
             AdornmentIcon="@Icons.Material.Filled.Abc"
-            HelperText="@localizer["CalcDesc"]" />
-        
+            HelperText="@localizer["CalcDesc"]" />    
     </div>
-}
+
+    <div>
+        <MudButton Variant="@Variant.Filled" OnClick="ValidationTest">Validation Test</MudButton>
+    </div>
+</EditForm>
 
 @code {
     [Parameter]
     public Guid? Id { get; set; }
 
-    public OLT_Host_Item? Model { get; private set; }
-    
+    public OLT_Host_Item Model 
+    { 
+        get => _Model; 
+        private set 
+        {
+            _Model = value;
+            editContext = new EditContext(_Model);
+        } 
+    }
+    public OLT_Host_Item _Model = new();
+
+    private EditContext? editContext;
+
     protected override void OnInitialized()
     {
+        Model = _Model;
         appDataService.SetTitle(localizer);
     }
 
@@ -131,12 +142,16 @@ else
             appDataService.Loading = true;
             StateHasChanged();
 
-            Model = await oltServices.GetHostItem(Id.Value);
+            Model = (await oltServices.GetHostItem(Id.Value)) ?? new ();
         }
         finally
         {
             appDataService.Loading = false;
             StateHasChanged();
         }
+    }
+    private void ValidationTest(MouseEventArgs args)
+    {
+        editContext.Validate();
     }
 }

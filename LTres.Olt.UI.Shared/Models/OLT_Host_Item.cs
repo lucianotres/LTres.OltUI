@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using LTres.Olt.UI.Shared.Validation;
+
 namespace LTres.Olt.UI.Shared.Models;
 
 public class OLT_Host_Item
@@ -5,7 +8,9 @@ public class OLT_Host_Item
     public Guid Id { get; set; }
     public Guid? IdOltHost { get; set; }
     public Guid? IdRelated { get; set; }
+    [Required]
     public string? Action { get; set; }
+    [OltItemKeyValidation]
     public string? ItemKey { get; set; }
     public DateTime? LastProbed { get; set; }
     public DateTime? NextProbe { get; set; }
@@ -22,6 +27,7 @@ public class OLT_Host_Item
     public Guid? From { get; set; }
     public string? Calc { get; set; }
     public bool? AsHex { get; set; }
+    [Required]
     public string? Description { get; set; }
 }
 
