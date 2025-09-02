@@ -20,20 +20,20 @@ sealed public class OltItemKeyValidationAttribute : ValidationAttribute
             return null;
 
         if (itemObj.Action == OLT_Host_ItemExtensions.ActionPing)
-            return string.IsNullOrEmpty(valueString) ? ValidationResult.Success : new ValidationResult("When action it's Ping should not have a key.", [validationContext.MemberName!]);
+            return string.IsNullOrEmpty(valueString) ? ValidationResult.Success : new ValidationResult("When action is Ping, it should not have a key.", [validationContext.MemberName!]);
         else if (itemObj.Action == OLT_Host_ItemExtensions.ActionSnmpGet || itemObj.Action == OLT_Host_ItemExtensions.ActionSnmpWalk)
         {
             if (string.IsNullOrEmpty(valueString))
-                return new ValidationResult("When action it's SNMP should have a key.", [validationContext.MemberName!]);
+                return new ValidationResult("When action is SNMP, it should have a key.", [validationContext.MemberName!]);
 
             if (itemObj.Template.GetValueOrDefault())
                 return Regex.IsMatch(valueString, RegexValidSNMPwithIndex, RegexOptions.None) ?
                         ValidationResult.Success :
-                        new ValidationResult("Key value isn't a valid SNMP key or is missing {index}.", [validationContext.MemberName!]);
+                        new ValidationResult("The key value isn't a valid SNMP key or is missing {index}.", [validationContext.MemberName!]);
             else
                 return Regex.IsMatch(valueString, RegexValidSNMP, RegexOptions.None) ?
                         ValidationResult.Success :
-                        new ValidationResult("Key value isn't a valid SNMP key.", [validationContext.MemberName!]);
+                        new ValidationResult("The key value isn't a valid SNMP key.", [validationContext.MemberName!]);
         }
         else
             return ValidationResult.Success;
