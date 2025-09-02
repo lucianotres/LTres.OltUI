@@ -13,6 +13,15 @@
     flex: 0;
 }
 
+.data-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 32px;
+}
+
 
 .data-record {
     display: grid;

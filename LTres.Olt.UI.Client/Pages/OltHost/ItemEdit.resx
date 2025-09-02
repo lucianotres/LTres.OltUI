@@ -177,4 +177,8 @@
     <value>SNMP item key to probe</value>
     <comment/>
   </data>
+  <data name="SavedMsg" xml:space="preserve">
+    <value>Item {0} successfully saved!</value>
+    <comment/>
+  </data>
 </root>
