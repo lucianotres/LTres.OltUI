@@ -16,7 +16,7 @@
     <MudSpacer />
     <MudButton Variant="@Variant.Filled" 
         EndIcon="@Icons.Material.Filled.AddCircle"
-        Href="/OltHost/new"
+        Href="@($"/OltHost/Item/New/{Id}")"
         >@localizer["New"]</MudButton>
 </MudToolBar>
 
@@ -43,6 +43,10 @@
             <MudTd>
                 <MudMenu Icon="@Icons.Material.Filled.MoreVert" Size="Size.Small" AriaLabel="Open user menu">
                     <MudMenuItem Icon="@Icons.Material.Filled.Edit" Label="Edit" Href="@($"/OltHost/Item/Edit/{context.Id}")" />
+                    @if (context.Action == OLT_Host_ItemExtensions.ActionSnmpWalk)
+                    {
+                        <MudMenuItem Icon="@Icons.Material.Filled.AddCircle" Label="New related item" Href="@($"/OltHost/Item/New/{Id}?RelatedTo={context.Id}")" />
+                    }
                     <MudMenuItem Icon="@Icons.Material.Filled.Delete" Label="Delete" />
                     <MudMenuItem Label="Active / Inactive" />
                 </MudMenu>

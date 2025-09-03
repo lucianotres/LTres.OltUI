@@ -1,4 +1,5 @@
 @page "/OltHost/Item/Edit/{id:guid}"
+@page "/OltHost/Item/New/{idolt:guid}"
 @using LTres.Olt.UI.Shared.Models
 @attribute [Authorize]
 @inject AppPageLocalizer<ItemEdit> localizer
@@ -120,7 +121,14 @@ else
     [Parameter]
     public Guid? Id { get; set; }
 
-    public OLT_Host_Item Model 
+    [Parameter]
+    public Guid? IdOlt { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "RelatedTo")]
+    public Guid? RelatedTo { get; set; }
+
+    public OLT_Host_Item? Model 
     { 
         get => _Model; 
         private set 
@@ -146,6 +154,12 @@ else
 
     private async Task LoadData()
     {
+        if (!Id.HasValue && IdOlt.HasValue)
+        {
+            NewItemCreate();
+            return;
+        }
+
         if (!Id.HasValue)
             return;
 
@@ -166,6 +180,24 @@ else
             appDataService.Loading = false;
             StateHasChanged();
         }
+    }
+
+    private void NewItemCreate()
+    {
+        if (!IdOlt.HasValue)
+            return;
+
+        Model = new()
+        {
+            IdOltHost = IdOlt.Value,
+            Active = true,
+            Action = OLT_Host_ItemExtensions.ActionSnmpGet,
+            Interval = 60,
+            IdRelated = RelatedTo.HasValue ? RelatedTo.Value : null,
+            Template = RelatedTo.HasValue
+        };
+
+        StateHasChanged();
     }
 
     private async Task<bool?> SaveData()
