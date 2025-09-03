@@ -62,7 +62,7 @@ public class OLTServices(IHttpClientFactory clientFactory)
 
     public async Task<(bool ok, Guid? id, string? message)> PostHostItem(OLT_Host_Item item)
     {
-        var result = await _client.PostAsJsonAsync($"OLTHostItem", item);
+        var result = await _client.PostAsJsonAsync("OLTHostItem", item);
 
         if (result.StatusCode == HttpStatusCode.Created)
             return (true, await result.Content.ReadFromJsonAsync<Guid>(), null);
@@ -74,7 +74,7 @@ public class OLTServices(IHttpClientFactory clientFactory)
 
     public async Task<(bool ok, Guid? id, string? message)> PutHostItem(OLT_Host_Item item)
     {
-        var result = await _client.PutAsJsonAsync($"OLTHostItem", item);
+        var result = await _client.PutAsJsonAsync("OLTHostItem", item);
 
         if (result.StatusCode == HttpStatusCode.OK)
             return (true, await result.Content.ReadFromJsonAsync<Guid>(), null);
@@ -82,6 +82,18 @@ public class OLTServices(IHttpClientFactory clientFactory)
             return (false, null, await result.Content.ReadAsStringAsync());
         else
             return (false, null, null);
+    }
+
+    public async Task<(bool ok, string? message)> DeleteHostItem(Guid itemId)
+    {
+        var result = await _client.DeleteAsync($"OLTHostItem/{itemId}");
+
+        if (result.IsSuccessStatusCode)
+            return (true, null);
+        else
+            return (false, result.Content.Headers.ContentLength > 0
+                ? await result.Content.ReadAsStringAsync()
+                : null);
     }
     
 }

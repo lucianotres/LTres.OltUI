@@ -7,6 +7,7 @@
 @inject IJSRuntime js
 @inject DialogTools dialog
 @inject ToastTools toast
+@inject ILogger<Item> logger
 
 <MudToolBar Dense="true">
     <MudButton Variant="@Variant.Filled" 
@@ -21,7 +22,7 @@
 </MudToolBar>
 
 <div>
-    <MudTable ServerData="ServerDataLoad" Dense="true" Class="item-table" RowClassFunc="RowClassCustomized">
+    <MudTable @ref="dtTable" ServerData="ServerDataLoad" Dense="true" Class="item-table" RowClassFunc="RowClassCustomized">
         <HeaderContent>
             <MudTh>@localizer["Action"]</MudTh>
             <MudTh>@localizer["ItemKey"]</MudTh>
@@ -47,8 +48,8 @@
                     {
                         <MudMenuItem Icon="@Icons.Material.Filled.AddCircle" Label="New related item" Href="@($"/OltHost/Item/New/{Id}?RelatedTo={context.Id}")" />
                     }
-                    <MudMenuItem Icon="@Icons.Material.Filled.Delete" Label="Delete" />
-                    <MudMenuItem Label="Active / Inactive" />
+                    <MudMenuItem Icon="@Icons.Material.Filled.Delete" Label="Delete" OnClick="() => HandleDeleteItem(context)" />
+                    @* <MudMenuItem Label="Active / Inactive" /> *@
                 </MudMenu>
             </MudTd>
         </RowTemplate>
@@ -59,6 +60,8 @@
 {
     [Parameter]
     public Guid? Id { get; set; }
+
+    private MudTable<OLT_Host_Item> dtTable { get; set; }
 
 
     protected override void OnInitialized()
@@ -95,4 +98,50 @@
     private string RowClassCustomized(OLT_Host_Item item, int index) 
         => item.Template.GetValueOrDefault() ? "is-template" : "is-normal";
 
+    private async Task<(bool ok, string? message)> DeleteData(OLT_Host_Item item)
+    {
+        try
+        {
+            appDataService.Loading = true;
+            StateHasChanged();
+            
+            return await oltServices.DeleteHostItem(item.Id);
+        }
+        catch(Exception error)
+        {
+            logger.LogError(error, null);
+            return (false, null);
+        }
+        finally
+        {
+            appDataService.Loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async void HandleDeleteItem(OLT_Host_Item item)
+    {
+        if (item.Id == Guid.Empty)
+            return;
+
+        
+        var firstDialog = await dialog.DeleteAsync(string.Format(localizer["DeleteMsg1"], item.Description), localizer["Title"]);
+        if (((await firstDialog.Result)?.Canceled).GetValueOrDefault(true))
+            return;
+
+        var secondDialog = await dialog.DeleteAsync(string.Format(localizer["DeleteMsg2"], item.Description), localizer["Title"]);
+        if (((await secondDialog.Result)?.Canceled).GetValueOrDefault(true))
+            return;
+
+        var deleteResult = await DeleteData(item);
+        if (deleteResult.ok)
+        {
+            toast.Success(string.Format(localizer["DeleteSuccess"], item.Description));
+            await dtTable.ReloadServerData();
+        }
+        else
+        {
+            toast.Error(string.Format(deleteResult.message ?? localizer["SaveError"], item.Description));
+        }
+    }
 }        

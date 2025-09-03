@@ -149,4 +149,16 @@
     <value>Descrição</value>
     <comment/>
   </data>
+  <data name="DeleteMsg1" xml:space="preserve">
+    <value>Confirma exclusão do item de dispositivo {0}?</value>
+    <comment/>
+  </data>
+  <data name="DeleteMsg2" xml:space="preserve">
+    <value>Você tem certeza que deseja excluir {0}? Esta ação é IRREVERSÍVEL e irá apagar TODOS os dados dele.</value>
+    <comment/>
+  </data>
+  <data name="DeleteSuccess" xml:space="preserve">
+    <value>Item de dispositivo {0} e todos os seus dados foram removidos!</value>
+    <comment/>
+  </data>
 </root>
