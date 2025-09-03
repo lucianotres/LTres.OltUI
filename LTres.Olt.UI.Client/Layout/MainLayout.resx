@@ -138,7 +138,7 @@
     <comment/>
   </data>
   <data name="SaveError" xml:space="preserve">
-    <value>Data could not be saved, contact the administrator!</value>
+    <value>Data could not be saved, try again or contact the administrator!</value>
     <comment/>
   </data>
   <data name="New" xml:space="preserve">
@@ -147,6 +147,18 @@
   </data>
   <data name="Return" xml:space="preserve">
     <value>Return</value>
+    <comment/>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>Data could not be loaded, try again or contact the administrator!</value>
+    <comment/>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading...</value>
+    <comment/>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Data not found!</value>
     <comment/>
   </data>
 </root>

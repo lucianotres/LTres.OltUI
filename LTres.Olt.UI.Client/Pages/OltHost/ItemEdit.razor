@@ -4,11 +4,21 @@
 @inject AppPageLocalizer<ItemEdit> localizer
 @inject OLTServices oltServices
 @inject AppDataService appDataService
-@inject IJSRuntime js
 @inject DialogTools dialog
 @inject ToastTools toast
 @inject NavigationManager navigation
+@inject ILogger<ItemEdit> logger
 
+@if (Model == null && appDataService.Loading)
+{
+    <MudText>@localizer["Loading"]</MudText>
+}
+else if (Model == null)
+{
+    <MudText>@localizer["NotFound"]</MudText>
+}
+else
+{
 <EditForm EditContext="@editContext">
     <DataAnnotationsValidator />
     
@@ -104,6 +114,7 @@
             OnClick="HandleCancel">@localizer["Cancel"]</MudButton>
     </div>
 </EditForm>
+}
 
 @code {
     [Parameter]
@@ -115,16 +126,15 @@
         private set 
         {
             _Model = value;
-            editContext = new EditContext(_Model);
+            editContext = value == null ? null : new EditContext(value);
         } 
     }
-    public OLT_Host_Item _Model = new();
+    private OLT_Host_Item? _Model;
 
     private EditContext? editContext;
 
     protected override void OnInitialized()
     {
-        Model = _Model;
         appDataService.SetTitle(localizer);
     }
 
@@ -144,7 +154,12 @@
             appDataService.Loading = true;
             StateHasChanged();
 
-            Model = (await oltServices.GetHostItem(Id.Value)) ?? new ();
+            Model = await oltServices.GetHostItem(Id.Value);
+        }
+        catch(Exception error)
+        {
+            toast.Error(localizer["LoadError"]);
+            logger.LogError(error.ToString());
         }
         finally
         {
@@ -158,11 +173,10 @@
         await Task.Delay(1);
         return true; //todo
     }
+
+    private void NavigateToOltItems() => navigation.NavigateTo(Model == null ? $"/OltHost" : $"/OltHost/Item/{Model.IdOltHost}");
     
-    private async Task HandleCancel()
-    {
-        await js.InvokeVoidAsync("history.back");
-    }
+    private void HandleCancel() => NavigateToOltItems();
 
     private async Task HandleSubmit()
     {
@@ -178,6 +192,6 @@
             toast.Error(localizer["SaveError"]);
 
         if (saved.GetValueOrDefault(true))
-            navigation.NavigateTo($"/OltHost/Item/{Model.IdOltHost}");
+            NavigateToOltItems();
     }
 }
