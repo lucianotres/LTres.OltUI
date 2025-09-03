@@ -200,10 +200,42 @@ else
         StateHasChanged();
     }
 
+    private string? _savedError;
+
     private async Task<bool?> SaveData()
     {
-        await Task.Delay(1);
-        return true; //todo
+        try
+        {
+            appDataService.Loading = true;
+            StateHasChanged();
+
+            _savedError = null;
+
+            if (Id.HasValue)
+            {
+                var result = await oltServices.PutHostItem(Model);
+                _savedError = result.message;
+                return (result.ok && result.id == Guid.Empty) 
+                    ? null //nothing changed
+                    : (result.ok && result.id == Id.Value); //saved?
+            }
+            else
+            {
+                var result = await oltServices.PostHostItem(Model);
+                _savedError = result.message;
+                return (result.ok && result.id != Guid.Empty);
+            }
+        }
+        catch(Exception error)
+        {
+            return false;
+            logger.LogError(error.ToString());
+        }
+        finally
+        {
+            appDataService.Loading = false;
+            StateHasChanged();
+        }
     }
 
     private void NavigateToOltItems() => navigation.NavigateTo(Model == null ? $"/OltHost" : $"/OltHost/Item/{Model.IdOltHost}");
@@ -221,7 +253,7 @@ else
             toast.Success(string.Format(localizer["SavedMsg"], Model.Description));
 
         if (saved == false)
-            toast.Error(localizer["SaveError"]);
+            toast.Error(_savedError ?? localizer["SaveError"]);
 
         if (saved.GetValueOrDefault(true))
             NavigateToOltItems();

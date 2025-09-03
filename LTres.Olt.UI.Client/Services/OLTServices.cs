@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+using System.Net;
 using System.Net.Http.Json;
 using LTres.Olt.UI.Shared.Models;
 
@@ -45,7 +47,7 @@ public class OLTServices(IHttpClientFactory clientFactory)
     public async Task<IList<OLT_Host_Item>?> GetHostItems(Guid hostId)
     {
         var result = await _client.GetAsync($@"OLTHostItem/ByOLT/{hostId}");
-        return result.StatusCode == System.Net.HttpStatusCode.OK ?
+        return result.StatusCode == HttpStatusCode.OK ?
             await result.Content.ReadFromJsonAsync<IList<OLT_Host_Item>>() :
             null;
     }
@@ -53,9 +55,33 @@ public class OLTServices(IHttpClientFactory clientFactory)
     public async Task<OLT_Host_Item?> GetHostItem(Guid itemId)
     {
         var result = await _client.GetAsync($"OLTHostItem/{itemId}");
-        return result.StatusCode == System.Net.HttpStatusCode.OK ?
+        return result.StatusCode == HttpStatusCode.OK ?
             await result.Content.ReadFromJsonAsync<OLT_Host_Item>() :
             null;
+    }
+
+    public async Task<(bool ok, Guid? id, string? message)> PostHostItem(OLT_Host_Item item)
+    {
+        var result = await _client.PostAsJsonAsync($"OLTHostItem", item);
+
+        if (result.StatusCode == HttpStatusCode.Created)
+            return (true, await result.Content.ReadFromJsonAsync<Guid>(), null);
+        else if (result.StatusCode == HttpStatusCode.BadRequest)
+            return (false, null, await result.Content.ReadAsStringAsync());
+        else
+            return (false, null, null);
+    }
+
+    public async Task<(bool ok, Guid? id, string? message)> PutHostItem(OLT_Host_Item item)
+    {
+        var result = await _client.PutAsJsonAsync($"OLTHostItem", item);
+
+        if (result.StatusCode == HttpStatusCode.OK)
+            return (true, await result.Content.ReadFromJsonAsync<Guid>(), null);
+        else if (result.StatusCode == HttpStatusCode.BadRequest)
+            return (false, null, await result.Content.ReadAsStringAsync());
+        else
+            return (false, null, null);
     }
     
 }
