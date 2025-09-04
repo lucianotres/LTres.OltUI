@@ -1,4 +1,5 @@
-<div>
+@implements IDisposable
+<div class="det-content">
     <MudTimeSeriesChart ChartSeries="@_series"
                         Width="100%"
                         Height="150"
@@ -10,7 +11,21 @@
                             MaxNumYAxisTicks = 5
                         })"
                         TimeLabelSpacing="TimeSpan.FromMinutes(1)"
-                        DataMarkerTooltipTimeLabelFormat="yyyy MMM dd HH:mm:ss" />
+                        DataMarkerTooltipTimeLabelFormat="yyyy-MM-dd HH:mm:ss" />
+    <div class="det-info">
+        <div class="det-info-item">
+            <MudText Typo="Typo.caption">Probe status:</MudText>
+            <MudText Typo="Typo.body1" Color="Color.Success">Success</MudText>
+        </div>
+        <div class="det-info-item">
+            <MudText Typo="Typo.caption">Last probed at:</MudText>
+            <MudText Typo="Typo.body1">@_lastProbed.ToString("yyyy-MM-dd HH:mm:ss")</MudText>
+        </div>
+        <div class="det-info-item">
+            <MudText Typo="Typo.caption">Last value:</MudText>
+            <MudText Typo="Typo.body1">@_lastValue</MudText>
+        </div>
+    </div>
 </div>
 
 @code {
@@ -18,22 +33,70 @@
     public Guid Id { get; set; }
 
     private List<TimeSeriesChartSeries> _series = new();
+    private TimeSeriesChartSeries _serie = new() {
+        Index = 0,
+        Name = "Value"
+    };
+
+    private Random random = new();
+
+    private int _lastValue;
+
+    private DateTime _lastProbed;
+
+    CancellationTokenSource ctsTestLoop = new();
 
     protected override void OnInitialized()
     {
-        var now = DateTime.Now;
-        var random = new Random();
+        StartData();
 
-        _series.Add(new TimeSeriesChartSeries()
-        {
-            Index = 0,
-            Name = "Value",
-            Data = Enumerable.Range(-30, 30)
-                .Select(x => new TimeSeriesChartSeries.TimeValue(
-                    now.AddSeconds(x * 10), 
-                    random.Next(6000, 15000)
-                ))
-                .ToList()
-        });
+        //loop test
+        _ = Task.Factory.StartNew(async () => {
+            while (!ctsTestLoop.IsCancellationRequested) {
+                UpdateData();
+
+                Console.WriteLine("aqui");
+                await Task.Delay(TimeSpan.FromSeconds(5));
+            }
+        }, ctsTestLoop.Token);
     }
+
+    public void Dispose()
+    {
+        ctsTestLoop.Cancel();
+    }
+
+    private void StartData()
+    {
+        _series.Clear();
+        _series.Add(_serie);
+
+        var now = DateTime.Now;
+
+        _serie.Data = Enumerable.Range(-30, 30)
+            .Select(x => new TimeSeriesChartSeries.TimeValue(
+                now.AddSeconds(x * 10), 
+                random.Next(100, 350)
+            ))
+            .ToList();
+
+        _lastProbed = _serie.Data.Last().DateTime;
+        _lastValue = (int)_serie.Data.Last().Value;
+
+        StateHasChanged();
+    }
+
+    private void UpdateData()
+    {
+        _serie.Data = _serie.Data
+            .Skip(1)
+            .Append(new TimeSeriesChartSeries.TimeValue(
+                _lastProbed = DateTime.Now, 
+                _lastValue = random.Next(100, 350)
+            ))
+            .ToList();
+
+        StateHasChanged();
+    }
+
 }
