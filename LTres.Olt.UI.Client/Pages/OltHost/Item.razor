@@ -22,7 +22,16 @@
 </MudToolBar>
 
 <div>
-    <MudTable @ref="dtTable" ServerData="ServerDataLoad" Dense="true" Class="item-table" RowClassFunc="RowClassCustomized">
+    <MudTable @ref="dtTable" 
+        ServerData="ServerDataLoad" 
+        Dense="true" 
+        Class="item-table" 
+        RowClassFunc="RowClassCustomized" 
+        SelectOnRowClick="true"
+        SelectedItemChanged="@((OLT_Host_Item i) => StateHasChanged())">
+        <LoadingContent>
+            <MudText>@localizer["Loading"]</MudText>
+        </LoadingContent>
         <HeaderContent>
             <MudTh>@localizer["Action"]</MudTh>
             <MudTh>@localizer["ItemKey"]</MudTh>
@@ -53,6 +62,32 @@
                 </MudMenu>
             </MudTd>
         </RowTemplate>
+        <ChildRowContent>
+            @if(context == dtTable.SelectedItem)
+            {
+                <MudTr Class="is-detail">
+                    <td colspan="8">
+                        <div class="det-content">
+                            <OltHostItemLastValues Id="@context.Id"/>
+                            <div class="det-info">
+                                <div class="det-info-item">
+                                    <MudText Typo="Typo.caption">Probe status:</MudText>
+                                    <MudText Typo="Typo.body1" Color="Color.Success">Success</MudText>
+                                </div>
+                                <div class="det-info-item">
+                                    <MudText Typo="Typo.caption">Last probed at:</MudText>
+                                    <MudText Typo="Typo.body1">2025-05-01 10:55:01</MudText>
+                                </div>
+                                <div class="det-info-item">
+                                    <MudText Typo="Typo.caption">Last value:</MudText>
+                                    <MudText Typo="Typo.body1">315</MudText>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </MudTr>
+            }
+        </ChildRowContent>
     </MudTable>
 </div>
 
@@ -98,6 +133,7 @@
     private string RowClassCustomized(OLT_Host_Item item, int index) 
         => item.Template.GetValueOrDefault() ? "is-template" : "is-normal";
 
+    
     private async Task<(bool ok, string? message)> DeleteData(OLT_Host_Item item)
     {
         try

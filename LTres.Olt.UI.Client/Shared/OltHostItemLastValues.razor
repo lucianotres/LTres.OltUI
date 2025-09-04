@@ -1,0 +1,39 @@
+<div>
+    <MudTimeSeriesChart ChartSeries="@_series"
+                        Width="100%"
+                        Height="150"
+                        MatchBoundsToSize="true"
+                        ChartOptions="@(new ChartOptions()
+                        {
+                            LineStrokeWidth = 2,
+                            ShowLegend = false,
+                            MaxNumYAxisTicks = 5
+                        })"
+                        TimeLabelSpacing="TimeSpan.FromMinutes(1)"
+                        DataMarkerTooltipTimeLabelFormat="yyyy MMM dd HH:mm:ss" />
+</div>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private List<TimeSeriesChartSeries> _series = new();
+
+    protected override void OnInitialized()
+    {
+        var now = DateTime.Now;
+        var random = new Random();
+
+        _series.Add(new TimeSeriesChartSeries()
+        {
+            Index = 0,
+            Name = "Value",
+            Data = Enumerable.Range(-30, 30)
+                .Select(x => new TimeSeriesChartSeries.TimeValue(
+                    now.AddSeconds(x * 10), 
+                    random.Next(6000, 15000)
+                ))
+                .ToList()
+        });
+    }
+}
