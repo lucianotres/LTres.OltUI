@@ -42,6 +42,7 @@ builder.Services.AddHttpClient("api", client =>
     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 });
 builder.Services.AddTransient<OLTServices>();
+builder.Services.AddTransient<OLTValuesHistoryService>();
 builder.Services.AddSingleton<AppDataService>();
 
 await builder.Build().RunAsync();
