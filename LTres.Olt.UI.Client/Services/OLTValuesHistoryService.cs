@@ -17,9 +17,9 @@ public class OLTValuesHistoryService
             quantity = 9999999;
 
         if (!startDate.HasValue)
-            startDate = DateTime.Now;
+            startDate = DateTime.Now.AddSeconds((quantity-1) * (-10));
         
-        var values = Enumerable.Range(0, quantity-1)
+        var values = Enumerable.Range(0, quantity)
             .Select(x => new OLT_Host_Item_Value()
             {
                 Trend = false,

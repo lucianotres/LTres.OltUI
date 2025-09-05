@@ -1,7 +1,6 @@
 .det-content {
     display: flex;
     flex-direction: row;
-    gap: 8px;
     justify-items: stretch;
 }
 ::deep .det-content > *:first-child {
